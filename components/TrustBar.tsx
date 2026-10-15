@@ -12,9 +12,9 @@ const STATS = [
 
 export function TrustBar() {
   return (
-    <section className="bg-white border-b border-[#E5EDE8] py-8">
-      <div className="max-w-[1200px] mx-auto px-6 md:px-12">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+    <section className="bg-white border-b border-[#E5EDE8] py-6 sm:py-8">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 md:px-12">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-6 text-center">
           {STATS.map((s, i) => (
             <motion.div
               key={s.title}
@@ -22,11 +22,11 @@ export function TrustBar() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.45, delay: i * 0.08 }}
-              className="flex flex-col items-center"
+              className="flex flex-col items-center min-w-0 px-1"
             >
-              <s.icon size={24} className="text-[#15803D] mb-1" />
-              <span className="font-display text-[18px] font-bold text-[#10241A]">{s.title}</span>
-              <span className="text-[11px] text-[#6B7280] mt-0.5">{s.sub}</span>
+              <s.icon size={24} className="text-[#15803D] mb-1.5 shrink-0" />
+              <span className="font-display text-[15px] sm:text-[18px] font-bold text-[#10241A] leading-tight">{s.title}</span>
+              <span className="text-[11px] text-[#6B7280] mt-1 leading-snug text-balance">{s.sub}</span>
             </motion.div>
           ))}
         </div>

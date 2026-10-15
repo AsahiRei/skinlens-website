@@ -35,18 +35,18 @@ function SkinCard({
   highlight?: boolean;
 }) {
   return (
-    <div
-      className={`bg-white rounded-[20px] p-5 border shadow-xs ${
+      <div
+      className={`bg-white rounded-[18px] sm:rounded-[20px] p-4 sm:p-5 border shadow-xs min-w-0 ${
         highlight ? "border-[#15803D]/30 ring-1 ring-[#15803D]/20" : "border-[#E5EDE8]"
       }`}
     >
-      <div className="flex justify-between items-center mb-3">
-        <span className="font-semibold text-[14px] text-[#10241A]">{day}</span>
-        <span className={`px-2 py-0.5 rounded-full text-[11px] font-semibold ${scoreTone}`}>
+      <div className="flex justify-between items-center gap-2 mb-3">
+        <span className="font-semibold text-[14px] text-[#10241A] truncate">{day}</span>
+        <span className={`px-2 py-0.5 rounded-full text-[11px] font-semibold whitespace-nowrap shrink-0 ${scoreTone}`}>
           {score}
         </span>
       </div>
-      <div className={`h-44 rounded-[14px] overflow-hidden relative ${gradient}`}>
+      <div className={`h-36 sm:h-44 rounded-[14px] overflow-hidden relative ${gradient}`}>
         <div className="absolute inset-0 flex items-center justify-center">
           <ScanFace size={56} className="text-white/50" strokeWidth={1.2} />
         </div>
@@ -76,29 +76,29 @@ export function ClinicalTimeline() {
   const [view, setView] = useState<"both" | "day1" | "day28">("both");
 
   return (
-    <section className="py-20 md:py-28 bg-white border-b border-[#E5EDE8]" id="clinical">
-      <div className="max-w-[1200px] mx-auto px-6 md:px-12">
-        <div className="text-center max-w-2xl mx-auto mb-10 space-y-3">
+    <section className="py-14 sm:py-20 md:py-28 bg-white border-b border-[#E5EDE8]" id="clinical">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 md:px-12">
+        <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-10 space-y-3 px-1">
           <SectionPill icon={<TrendingUp size={16} />}>Progress Tracking</SectionPill>
           <Reveal>
-            <h2 className="font-display text-[28px] leading-[36px] sm:text-[40px] sm:leading-[48px] font-semibold text-[#10241A]">
+            <h2 className="font-display text-[26px] leading-[34px] sm:text-[40px] sm:leading-[48px] font-semibold text-[#10241A] text-balance">
               Watch Your Score Change Scan to Scan
             </h2>
           </Reveal>
           <Reveal delay={0.1}>
-            <p className="text-[16px] text-[#3F4A44]">
+            <p className="text-[15px] sm:text-[16px] leading-relaxed text-[#3F4A44] text-pretty">
               The Progress tab charts your 0–100 scores, routine completion and
               sensitivity history — the same data you can share as a report
               with your dermatologist.
             </p>
           </Reveal>
           {/* Interactive view toggle */}
-          <div className="inline-flex items-center gap-1 p-1 mt-4 rounded-full bg-[#F4F7F5] border border-[#E5EDE8]">
+          <div className="inline-flex items-center gap-1 p-1 mt-4 rounded-full bg-[#F4F7F5] border border-[#E5EDE8] max-w-full">
             {(["both", "day1", "day28"] as const).map((v) => (
               <button
                 key={v}
                 onClick={() => setView(v)}
-                className={`px-4 py-1.5 rounded-full text-[13px] font-semibold transition-all ${
+                className={`px-3 sm:px-4 py-2 rounded-full text-[13px] font-semibold transition-all min-h-[36px] whitespace-nowrap cursor-pointer ${
                   view === v ? "bg-[#10241A] text-white shadow" : "text-[#3F4A44] hover:text-[#10241A]"
                 }`}
               >
@@ -109,8 +109,8 @@ export function ClinicalTimeline() {
         </div>
 
         <Reveal>
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-[#F4F7F5] rounded-[24px] p-8 md:p-12 border border-[#E5EDE8]">
-            <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-6 min-h-[320px]">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center bg-[#F4F7F5] rounded-[20px] sm:rounded-[24px] p-5 sm:p-8 md:p-12 border border-[#E5EDE8] min-w-0">
+            <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 min-h-[320px] min-w-0">
               <AnimatePresence mode="popLayout">
                 {(view === "both" || view === "day1") && (
                   <motion.div
@@ -160,21 +160,21 @@ export function ClinicalTimeline() {
               </AnimatePresence>
             </div>
 
-            <div className="lg:col-span-5 space-y-6">
-              <h3 className="font-display text-[24px] leading-[32px] font-semibold text-[#10241A] flex items-center gap-2">
-                <Sparkles size={22} className="text-[#15803D]" />
+            <div className="lg:col-span-5 space-y-5 sm:space-y-6 min-w-0">
+              <h3 className="font-display text-[20px] leading-[28px] sm:text-[24px] sm:leading-[32px] font-semibold text-[#10241A] flex items-center gap-2 text-balance">
+                <Sparkles size={22} className="text-[#15803D] shrink-0" />
                 Real App Data, Not Stock Photos
               </h3>
-              <p className="text-[16px] text-[#3F4A44]">
+              <p className="text-[15px] sm:text-[16px] leading-relaxed text-[#3F4A44] text-pretty">
                 Every scan saves your result, answers, score and routine, so
                 trends reflect your own history over time.
               </p>
               <div className="space-y-4">
                 {METRICS.map((m, i) => (
-                  <div key={m.label} className="space-y-1.5">
-                    <div className="flex justify-between text-[14px]">
-                      <span className="font-medium text-[#10241A]">{m.label}</span>
-                      <span className="font-bold text-[#15803D]">{m.delta}</span>
+                  <div key={m.label} className="space-y-1.5 min-w-0">
+                    <div className="flex justify-between items-baseline gap-3 text-[13px] sm:text-[14px]">
+                      <span className="font-medium text-[#10241A] truncate">{m.label}</span>
+                      <span className="font-bold text-[#15803D] whitespace-nowrap shrink-0 text-[12px] sm:text-[14px]">{m.delta}</span>
                     </div>
                     <div className="w-full bg-[#E5EDE8] rounded-full h-2.5">
                       <motion.div

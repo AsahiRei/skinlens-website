@@ -54,17 +54,17 @@ const CARDS = [
 
 export function Features() {
   return (
-    <section className="py-20 md:py-28 bg-[#F4F7F5]" id="technology">
-      <div className="max-w-[1200px] mx-auto px-6 md:px-12">
-        <div className="text-center max-w-2xl mx-auto mb-16 space-y-3">
+    <section className="py-14 sm:py-20 md:py-28 bg-[#F4F7F5]" id="technology">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 md:px-12">
+        <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-16 space-y-3 px-1">
           <SectionPill icon={<FlaskConical size={16} />}>What the app actually does</SectionPill>
           <Reveal>
-            <h2 className="font-display text-[28px] leading-[36px] sm:text-[40px] sm:leading-[48px] font-semibold text-[#10241A]">
+            <h2 className="font-display text-[26px] leading-[34px] sm:text-[40px] sm:leading-[48px] font-semibold text-[#10241A] text-balance">
               From Selfie to Score to Routine
             </h2>
           </Reveal>
           <Reveal delay={0.1}>
-            <p className="text-[16px] text-[#3F4A44]">
+            <p className="text-[15px] sm:text-[16px] leading-relaxed text-[#3F4A44] text-pretty">
               SkinLens checks your skin right on your phone: a quick scan, a
               short survey, and a daily routine made for you — all saved even
               without internet.
@@ -72,7 +72,7 @@ export function Features() {
           </Reveal>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
           {CARDS.map((c, i) => (
             <motion.div
               key={c.title}
@@ -81,7 +81,7 @@ export function Features() {
               viewport={{ once: true, margin: "-60px" }}
               transition={{ duration: 0.5, delay: (i % 3) * 0.1 }}
               whileHover={{ y: -6, boxShadow: "0 18px 40px -18px rgba(16,36,26,.22)" }}
-              className="bg-white rounded-[20px] p-8 border border-[#E5EDE8] shadow-xs flex flex-col justify-between cursor-default"
+              className="bg-white rounded-[18px] sm:rounded-[20px] p-6 sm:p-8 border border-[#E5EDE8] shadow-xs flex flex-col justify-between cursor-default min-w-0"
             >
               <div>
                 <div className="w-12 h-12 rounded-full bg-[#EAF6EE] text-[#15803D] flex items-center justify-center mb-6">

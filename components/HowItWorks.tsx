@@ -36,24 +36,24 @@ const STEPS = [
 
 export function HowItWorks() {
   return (
-    <section className="py-20 md:py-28 bg-white border-b border-[#E5EDE8]" id="diagnostics">
-      <div className="max-w-[1200px] mx-auto px-6 md:px-12">
-        <div className="text-center max-w-2xl mx-auto mb-16 space-y-3">
+    <section className="py-14 sm:py-20 md:py-28 bg-white border-b border-[#E5EDE8]" id="diagnostics">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 md:px-12">
+        <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-16 space-y-3 px-1">
           <SectionPill icon={<Brain size={16} />}>How it works in the app</SectionPill>
           <Reveal>
-            <h2 className="font-display text-[28px] leading-[36px] sm:text-[40px] sm:leading-[48px] font-semibold text-[#10241A]">
+            <h2 className="font-display text-[26px] leading-[34px] sm:text-[40px] sm:leading-[48px] font-semibold text-[#10241A] text-balance">
               Capture, Answer, Improve
             </h2>
           </Reveal>
           <Reveal delay={0.1}>
-            <p className="text-[16px] text-[#3F4A44]">
+            <p className="text-[15px] sm:text-[16px] leading-relaxed text-[#3F4A44] text-pretty">
               Three simple steps: capture or upload, check your skin, then get
               clear steps to follow.
             </p>
           </Reveal>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 relative">
           {STEPS.map((s, i) => (
             <motion.div
               key={s.n}
@@ -61,7 +61,7 @@ export function HowItWorks() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-60px" }}
               transition={{ duration: 0.5, delay: i * 0.12 }}
-              className="bg-[#F4F7F5] border border-[#E5EDE8] rounded-[20px] p-8 flex flex-col justify-between relative"
+              className="bg-[#F4F7F5] border border-[#E5EDE8] rounded-[18px] sm:rounded-[20px] p-6 sm:p-8 flex flex-col justify-between relative min-w-0"
             >
               {i < 2 && (
                 <div className="hidden md:block absolute top-1/2 -right-5 z-10 w-10 h-[2px] bg-gradient-to-r from-[#15803D]/50 to-transparent" />

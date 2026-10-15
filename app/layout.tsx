@@ -24,6 +24,12 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover" as const,
+};
+
 export default function RootLayout({
   children,
 }: {
@@ -32,7 +38,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <body
-        className={`${jakarta.variable} ${inter.variable} min-h-screen flex flex-col bg-[#F4F7F5] text-[#131e19] antialiased font-body`}
+        className={`${jakarta.variable} ${inter.variable} min-h-screen flex flex-col min-w-0 overflow-x-clip bg-[#F4F7F5] text-[#131e19] antialiased font-body`}
       >
         {children}
       </body>

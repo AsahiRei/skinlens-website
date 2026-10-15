@@ -48,7 +48,7 @@ export function SectionPill({
       whileInView={{ opacity: 1, scale: 1 }}
       viewport={{ once: true }}
       transition={{ duration: 0.4 }}
-      className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#EAF6EE] text-[#15803D] text-[12px] leading-4 font-semibold tracking-wide"
+      className="inline-flex max-w-full items-center justify-center gap-1.5 px-3 py-1.5 rounded-full bg-[#EAF6EE] text-[#15803D] text-[11px] sm:text-[12px] leading-4 font-semibold tracking-wide text-center text-balance"
     >
       {icon}
       {children}

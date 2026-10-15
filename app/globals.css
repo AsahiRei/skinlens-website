@@ -22,6 +22,24 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Prevent accidental horizontal scroll from absolute decorations on small screens */
+html,
+body {
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+/* Sticky navbar (~64-80px) would otherwise cover anchored sections */
+section[id] {
+  scroll-margin-top: 88px;
+}
+
+img,
+video,
+svg {
+  max-width: 100%;
+}
+
 ::selection {
   background: #95f8a7;
   color: #00210a;
