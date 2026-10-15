@@ -1,12 +1,18 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "motion/react";
 import { Play, Zap } from "lucide-react";
 import { Reveal } from "./Reveal";
+import { DownloadModal } from "./DownloadModal";
 
-const PLAY_STORE_URL = "#";
+// TODO: paste the Google Play URL when live — modal shows while empty.
+const PLAY_STORE_URL: string = "";
 
 export function CTA() {
+  const [modalOpen, setModalOpen] = useState(false);
+  const hasStoreUrl =
+    Boolean(PLAY_STORE_URL) && PLAY_STORE_URL !== "#";
 
   return (
     <section className="py-14 sm:py-20 md:py-28 bg-white" id="download">
@@ -35,20 +41,36 @@ export function CTA() {
               </p>
 
               <div className="pt-4 flex flex-col sm:flex-row gap-3 max-w-lg w-full">
-                <motion.a
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.97 }}
-                  href={PLAY_STORE_URL}
-                  className="px-7 py-3.5 rounded-full bg-[#15803D] hover:bg-[#22B358] text-white text-[14px] font-semibold transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer w-full sm:w-auto whitespace-nowrap min-h-[48px] border border-white/20"
-                >
-                  <Play size={18} />
-                  <span>Download for Android</span>
-                </motion.a>
+                {hasStoreUrl ? (
+                  <motion.a
+                    whileHover={{ scale: 1.03 }}
+                    whileTap={{ scale: 0.97 }}
+                    href={PLAY_STORE_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-7 py-3.5 rounded-full bg-[#15803D] hover:bg-[#22B358] text-white text-[14px] font-semibold transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer w-full sm:w-auto whitespace-nowrap min-h-[48px] border border-white/20"
+                  >
+                    <Play size={18} />
+                    <span>Download for Android</span>
+                  </motion.a>
+                ) : (
+                  <motion.button
+                    type="button"
+                    whileHover={{ scale: 1.03 }}
+                    whileTap={{ scale: 0.97 }}
+                    onClick={() => setModalOpen(true)}
+                    className="px-7 py-3.5 rounded-full bg-[#15803D] hover:bg-[#22B358] text-white text-[14px] font-semibold transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer w-full sm:w-auto whitespace-nowrap min-h-[48px] border border-white/20"
+                  >
+                    <Play size={18} />
+                    <span>Download for Android</span>
+                  </motion.button>
+                )}
               </div>
             </div>
           </div>
         </Reveal>
       </div>
+      <DownloadModal open={modalOpen} onClose={() => setModalOpen(false)} />
     </section>
   );
 }
