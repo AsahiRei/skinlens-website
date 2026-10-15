@@ -4,13 +4,20 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "motion/react";
 
-export function SplashScreen({ duration = 2200 }: { duration?: number }) {
+export function SplashScreen({
+  duration = 2200,
+  persistent = false,
+}: {
+  duration?: number;
+  persistent?: boolean;
+}) {
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
+    if (persistent) return;
     const t = window.setTimeout(() => setVisible(false), duration);
     return () => window.clearTimeout(t);
-  }, [duration]);
+  }, [duration, persistent]);
 
   useEffect(() => {
     if (!visible) return;
@@ -71,15 +78,28 @@ export function SplashScreen({ duration = 2200 }: { duration?: number }) {
             </motion.p>
 
             <div className="mt-6 h-1.5 w-40 overflow-hidden rounded-full bg-[#E5EDE8]">
-              <motion.div
-                initial={{ x: "-100%" }}
-                animate={{ x: "0%" }}
-                transition={{
-                  duration: duration / 1000 - 0.4,
-                  ease: "easeInOut",
-                }}
-                className="h-full w-full origin-left rounded-full bg-gradient-to-r from-[#22b358] to-[#15803D]"
-              />
+              {persistent ? (
+                <motion.div
+                  initial={{ x: "-100%" }}
+                  animate={{ x: "100%" }}
+                  transition={{
+                    duration: 1.2,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                  className="h-full w-full origin-left rounded-full bg-gradient-to-r from-[#22b358] to-[#15803D]"
+                />
+              ) : (
+                <motion.div
+                  initial={{ x: "-100%" }}
+                  animate={{ x: "0%" }}
+                  transition={{
+                    duration: duration / 1000 - 0.4,
+                    ease: "easeInOut",
+                  }}
+                  className="h-full w-full origin-left rounded-full bg-gradient-to-r from-[#22b358] to-[#15803D]"
+                />
+              )}
             </div>
           </div>
         </motion.div>
