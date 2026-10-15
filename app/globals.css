@@ -1,26 +1,60 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --font-display: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  --color-pine-950: #10241a;
+  --color-pine-900: #14532d;
+  --color-pine-700: #15803d;
+  --color-pine-600: #22b358;
+  --color-mint-100: #eaf6ee;
+  --color-mint-200: #dcfce7;
+  --color-mint-300: #95f8a7;
+  --color-cream: #f4f7f5;
+  --color-line: #e5ede8;
+  --color-muted: #3f4a44;
+  --color-faint: #6b7280;
+  --color-amber-soft: #fffbeb;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+html {
+  scroll-behavior: smooth;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+::selection {
+  background: #95f8a7;
+  color: #00210a;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.hero-wash {
+  background: radial-gradient(
+    circle at 50% 20%,
+    #f2fbf5 0%,
+    #ddf2e3 80%,
+    #f4f7f5 100%
+  );
+}
+
+.custom-pill-cta {
+  background: linear-gradient(to right, #214e36, #10241a);
+}
+
+.custom-badge-icon {
+  background: linear-gradient(135deg, #22b358, #15803d);
+}
+
+.glass-phone {
+  box-shadow:
+    0 25px 60px -15px rgba(16, 36, 26, 0.18),
+    0 0 0 1px #e5ede8;
+}
+
+/* thin scrollbar inside phone mockup */
+.phone-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+.phone-scroll::-webkit-scrollbar-thumb {
+  background: #dcfce7;
+  border-radius: 999px;
 }
