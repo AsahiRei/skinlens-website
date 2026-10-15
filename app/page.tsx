@@ -1,3 +1,4 @@
+import { SplashScreen } from "@/components/SplashScreen";
 import { Navbar } from "@/components/Navbar";
 import { Hero } from "@/components/Hero";
 import { TrustBar } from "@/components/TrustBar";
@@ -12,6 +13,7 @@ import { Footer } from "@/components/Footer";
 export default function Home() {
   return (
     <div className="flex flex-col flex-1 min-w-0 overflow-x-clip">
+      <SplashScreen />
       <Navbar />
       <main className="flex-grow min-w-0">
         <Hero />
