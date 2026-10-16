@@ -242,15 +242,6 @@ export function Hero() {
             variants={{ visible: { transition: { staggerChildren: 0.12 } } }}
             className="lg:col-span-7 flex flex-col items-start min-w-0 space-y-5 sm:space-y-6"
           >
-            <motion.div
-              variants={{ hidden: { opacity: 0, y: 16 }, visible: { opacity: 1, y: 0 } }}
-              transition={{ duration: 0.5 }}
-              className="inline-flex max-w-full flex-wrap justify-center sm:justify-start items-center gap-2 px-3 sm:px-4 py-1.5 rounded-full bg-[#EAF6EE] border border-[#DCFCE7] text-[#15803D] text-[11px] sm:text-[12px] font-semibold shadow-xs text-center sm:text-left"
-            >
-              <span className="w-2 h-2 rounded-full bg-[#15803D] animate-pulse shrink-0" />
-              <span className="break-words">Smart skin checks • 0–100 score • Daily routine</span>
-            </motion.div>
-
             <motion.h1
               variants={{ hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0 } }}
               transition={{ duration: 0.65 }}
@@ -297,20 +288,6 @@ export function Hero() {
                 <CirclePlay size={20} className="text-[#15803D]" />
                 <span>See How It Works</span>
               </motion.a>
-            </motion.div>
-
-            <motion.div
-              variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="pt-3 sm:pt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-[13px] sm:text-[14px] text-[#3F4A44]"
-            >
-              <span>5 skin types detected</span>
-              <span className="text-[#9CA3AF]">•</span>
-              <span>Works offline</span>
-              <span className="text-[#9CA3AF]">•</span>
-              <span className="px-2.5 py-1 rounded-full bg-white border border-[#E5EDE8] text-[#14532D] font-medium text-[11px] max-w-full">
-                Wellness tracking — not a medical diagnosis
-              </span>
             </motion.div>
           </motion.div>
 

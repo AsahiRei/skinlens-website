@@ -30,7 +30,6 @@ export function Privacy() {
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 md:px-12">
         <div className="bg-white rounded-[20px] sm:rounded-[24px] border border-[#E5EDE8] p-5 sm:p-8 md:p-14 shadow-xs min-w-0">
           <div className="max-w-3xl mb-8 sm:mb-12 space-y-4">
-            <SectionPill icon={<ShieldCheck size={16} />}>Private and Always Available</SectionPill>
             <Reveal>
               <h2 className="font-display text-[26px] leading-[34px] sm:text-[40px] sm:leading-[48px] font-semibold text-[#10241A] text-balance">
                 Your Scan Stays With You

@@ -26,10 +26,6 @@ export function CTA() {
               className="absolute -bottom-40 -left-24 w-80 h-80 rounded-full border border-white/10 pointer-events-none"
             />
             <div className="max-w-2xl relative z-10 space-y-6">
-              <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md text-[#95F8A7] text-[12px] border border-white/10">
-                <Zap size={16} />
-                Free Early Access
-              </span>
               <h2 className="font-display text-[26px] leading-[34px] sm:text-[40px] sm:leading-[48px] font-semibold tracking-tight text-balance">
                 Start Your Skin Journey Today
               </h2>

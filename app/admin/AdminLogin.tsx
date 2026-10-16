@@ -47,21 +47,14 @@ export function AdminLogin() {
               <p className="text-[12px] text-[#6B7280] mt-1">Admin page</p>
             </div>
           </div>
-
-          <div className="mt-5 inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 rounded-full bg-[#EAF6EE] border border-[#DCFCE7] text-[#15803D] text-[11px] sm:text-[12px] font-semibold">
-            <span className="w-2 h-2 rounded-full bg-[#15803D] animate-pulse shrink-0" />
-            <span>Restricted • Hidden page</span>
-          </div>
-
           <h1 className="font-display text-[26px] leading-[34px] sm:text-[32px] sm:leading-[40px] font-semibold tracking-tight text-[#10241A] text-balance mt-3">
-            Admin,{" "}
+            Admin {" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#14532D] via-[#15803D] to-[#2E6A41]">
-              locked by password
+              Login
             </span>
           </h1>
           <p className="text-[14px] leading-[22px] text-[#3F4A44] mt-2 text-pretty">
-            This page isn&apos;t linked from the website. Enter the admin
-            password to continue.
+            Enter your admin password to continue.
           </p>
 
           <form action={formAction} className="mt-6 flex flex-col gap-3">
@@ -69,7 +62,7 @@ export function AdminLogin() {
               htmlFor="admin-password"
               className="text-[12px] font-semibold tracking-wide text-[#3F4A44]"
             >
-              Admin password
+              Password
             </label>
             <div className="flex items-center gap-2.5 h-[52px] rounded-full bg-white border border-[#E5EDE8] px-4 focus-within:border-[#15803D] focus-within:ring-2 focus-within:ring-[#15803D]/15 transition-all">
               <LockKeyhole size={18} className="text-[#15803D] shrink-0" />
