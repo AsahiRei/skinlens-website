@@ -32,42 +32,29 @@ export function AdminLogin() {
         </Link>
 
         <div className="bg-white rounded-[20px] sm:rounded-[24px] p-6 sm:p-8 border border-[#E5EDE8] shadow-xs">
-          <div className="flex items-center gap-2.5">
+          <div className="flex justify-center items-center gap-2.5">
             <Image
               src="/skinlens-icon.png"
               alt="SkinLens app icon"
               width={40}
               height={40}
-              className="w-10 h-10 rounded-full object-cover shadow-sm ring-1 ring-[#E5EDE8]"
-            />
-            <div>
-              <p className="font-display text-[17px] font-semibold tracking-tight text-[#10241A] leading-none">
-                SkinLens
-              </p>
-              <p className="text-[12px] text-[#6B7280] mt-1">Admin page</p>
-            </div>
+              className="w-20 h-20 rounded-full object-cover shadow-sm ring-1 ring-[#E5EDE8]"
+            />   
           </div>
-          <h1 className="font-display text-[26px] leading-[34px] sm:text-[32px] sm:leading-[40px] font-semibold tracking-tight text-[#10241A] text-balance mt-3">
+          <h1 className="font-display text-[26px] leading-[34px] sm:text-[32px] sm:leading-[40px] font-semibold tracking-tight text-[#10241A] text-center mt-3">
             Admin {" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#14532D] via-[#15803D] to-[#2E6A41]">
               Login
             </span>
           </h1>
-          <p className="text-[14px] leading-[22px] text-[#3F4A44] mt-2 text-pretty">
+          <p className="text-[14px] leading-[22px] text-[#3F4A44] mt-2 text-center">
             Enter your admin password to continue.
           </p>
 
           <form action={formAction} className="mt-6 flex flex-col gap-3">
-            <label
-              htmlFor="admin-password"
-              className="text-[12px] font-semibold tracking-wide text-[#3F4A44]"
-            >
-              Password
-            </label>
             <div className="flex items-center gap-2.5 h-[52px] rounded-full bg-white border border-[#E5EDE8] px-4 focus-within:border-[#15803D] focus-within:ring-2 focus-within:ring-[#15803D]/15 transition-all">
               <LockKeyhole size={18} className="text-[#15803D] shrink-0" />
               <input
-                id="admin-password"
                 name="password"
                 type="password"
                 autoComplete="current-password"
@@ -91,7 +78,7 @@ export function AdminLogin() {
               disabled={isPending}
               className="custom-pill-cta text-white text-[14px] font-medium px-7 py-3.5 rounded-full shadow-md transition-all flex items-center justify-center gap-2 min-h-[52px] disabled:opacity-60 w-full"
             >
-              {isPending ? "Checking…" : "Unlock admin"}
+              {isPending ? "Signing In…" : "Login"}
             </motion.button>
           </form>
         </div>
