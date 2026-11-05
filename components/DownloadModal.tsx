@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { BellRing, X } from "lucide-react";
+import { X } from "lucide-react";
 
 type Props = {
   open: boolean;
@@ -62,18 +62,16 @@ export function DownloadModal({ open, onClose }: Props) {
               Coming Soon
             </h3>
             <p className="mt-2 text-[14px] leading-[22px] text-[#3F4A44]">
-              SkinLens is almost ready — we&apos;re putting the finishing
-              touches on your 30-second skin scan, 0–100 health score, and
-              daily routine. Check back soon.
+              SkinLens isn&apos;t on Google Play yet. We&apos;re finishing
+              testing before the first public release.
             </p>
 
-            <div className="mt-4 rounded-2xl bg-[#F4F7F5] border border-[#E5EDE8] p-4 flex items-start gap-3">
-              <BellRing size={20} className="text-[#15803D] shrink-0 mt-0.5" />
+            <div className="mt-4 rounded-2xl bg-[#F4F7F5] border border-[#E5EDE8] p-4">
               <p className="text-[13px] leading-[19px] text-[#3F4A44]">
                 <span className="font-semibold text-[#10241A]">
-                  Want early access?
+                  Free at launch.
                 </span>{" "}
-                Check back soon — launch is coming, and it&apos;ll be free.
+                Check this page again soon for the download link.
               </p>
             </div>
 

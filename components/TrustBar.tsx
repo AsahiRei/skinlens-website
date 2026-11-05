@@ -1,13 +1,12 @@
 "use client";
 
 import { motion } from "motion/react";
-import { LayoutGrid, Lock, MessageCircle, WifiOff } from "lucide-react";
 
 const STATS = [
-  { icon: LayoutGrid, title: "5 Skin Types", sub: "acne · dry · eczema · normal · oily" },
-  { icon: Lock, title: "Private by Design", sub: "checked right on your phone" },
-  { icon: WifiOff, title: "Works Offline", sub: "scan anytime, syncs later" },
-  { icon: MessageCircle, title: "Routine + Chat + Map", sub: "daily steps, guidance & clinic finder" },
+  { title: "5 Skin Results", sub: "acne · dry · eczema · normal · oily" },
+  { title: "On-Device Scan", sub: "your photo is analyzed on your phone" },
+  { title: "Works Offline", sub: "syncs when you reconnect" },
+  { title: "Free to Use", sub: "no subscription, no paywall" },
 ];
 
 export function TrustBar() {
@@ -24,7 +23,6 @@ export function TrustBar() {
               transition={{ duration: 0.45, delay: i * 0.08 }}
               className="flex flex-col items-center min-w-0 px-1"
             >
-              <s.icon size={24} className="text-[#15803D] mb-1.5 shrink-0" />
               <span className="font-display text-[15px] sm:text-[18px] font-bold text-[#10241A] leading-tight">{s.title}</span>
               <span className="text-[11px] text-[#6B7280] mt-1 leading-snug text-balance">{s.sub}</span>
             </motion.div>

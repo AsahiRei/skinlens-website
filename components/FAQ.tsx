@@ -2,29 +2,29 @@
 
 import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { ChevronDown, CircleHelp } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { Reveal, SectionPill } from "./Reveal";
 
 const FAQS = [
   {
     q: "Is SkinLens a replacement for a dermatologist?",
-    a: "No. As stated in the app itself: this app does not replace a dermatologist and is not a medical diagnosis. If you notice unusual, painful, or rapidly changing skin conditions, please consult a doctor or visit a hospital. SkinLens is for wellness tracking and routine guidance only.",
+    a: "No. SkinLens can point out a likely skin concern and suggest a routine, but it can't diagnose or treat anything. If a spot is painful, spreading, bleeding or changing quickly, see a doctor. The app can help you find a dermatologist nearby.",
   },
   {
     q: "Do I need internet to use it?",
-    a: "No. Your scan is checked right on your phone, so you can scan offline. Your results are backed up automatically the next time you're online.",
+    a: "Not for scanning. The skin check runs on your phone, and new scans are saved locally until you reconnect. You do need internet for your first sign-in, the one-time assistant download, product search and the clinic finder.",
   },
   {
-    q: "How does the 0–100 score work?",
-    a: "The app recognizes acne, dry, eczema, normal or oily skin and shows your closest matches. Your short survey answers are combined with the scan into one simple 0–100 score, from Excellent to Critical.",
+    q: "How is the 0–100 score calculated?",
+    a: "The scan picks the closest match among acne, dry, eczema, normal and oily. You then answer a few questions about that condition, such as how long you've had it and how severe it is. Each answer is worth points, and the total becomes your score: Excellent (85+), Good (70+), Fair (50+), Poor (30+) or Critical.",
   },
   {
     q: "Where do my photos and results go?",
-    a: "Your photos and results are saved on your phone first. When you're online, they're backed up securely. You can sign in with email or Google — the first sign-in needs internet, then the app works offline.",
+    a: "The photo is analyzed on your phone. Scans, photos and results are then backed up to your account when you're online, so your history survives a phone change. If you delete your account, the stored photos and records are deleted with it.",
   },
   {
     q: "What can I do inside the app?",
-    a: "Take guided photos or upload from your gallery, check front, left and right angles, get morning, afternoon and evening routines, chat for skincare guidance, follow your progress with charts, get reminders, find nearby clinics, and share reports.",
+    a: "Scan your skin, get a score and a daily routine, and set reminders for each step. You can also chat with Ask Derma, chart your progress, log flare-up triggers, find dermatologists within 5 km, book an appointment and export a PDF report.",
   },
 ];
 
@@ -35,7 +35,7 @@ export function FAQ() {
     <section className="py-14 sm:py-20 md:py-28 bg-[#F4F7F5]" id="faq">
       <div className="max-w-[800px] mx-auto px-4 sm:px-6 md:px-12">
         <div className="text-center mb-8 sm:mb-12 space-y-3 px-1">
-          <SectionPill icon={<CircleHelp size={16} />}>Clear Answers</SectionPill>
+          <SectionPill>FAQ</SectionPill>
           <Reveal>
             <h2 className="font-display text-[26px] leading-[34px] sm:text-[40px] sm:leading-[48px] font-semibold text-[#10241A] text-balance">
               Frequently Asked Questions
@@ -43,7 +43,7 @@ export function FAQ() {
           </Reveal>
           <Reveal delay={0.1}>
             <p className="text-[15px] sm:text-[16px] text-[#3F4A44]">
-              Simple answers about scans, scores, privacy and daily use.
+              Scans, scores, privacy and what the app can&apos;t do.
             </p>
           </Reveal>
         </div>

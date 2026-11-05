@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { motion } from "motion/react";
-import { Play, Zap } from "lucide-react";
 import { Reveal } from "./Reveal";
 import { DownloadModal } from "./DownloadModal";
 
@@ -27,13 +26,10 @@ export function CTA() {
             />
             <div className="max-w-2xl relative z-10 space-y-6">
               <h2 className="font-display text-[26px] leading-[34px] sm:text-[40px] sm:leading-[48px] font-semibold tracking-tight text-balance">
-                Start Your Skin Journey Today
+                Try SkinLens
               </h2>
               <p className="text-[15px] sm:text-[16px] text-[#AFCEBA] leading-relaxed text-pretty">
-                Take a guided selfie or upload a photo, answer a short survey,
-                and get your 0–100 score plus a morning, afternoon and evening
-                routine. Download the app now to get started — free. Currently
-                available for Android only.
+                Free to download and use. Android only for now.
               </p>
 
               <div className="pt-4 flex flex-col sm:flex-row gap-3 max-w-lg w-full">
@@ -46,7 +42,6 @@ export function CTA() {
                     rel="noopener noreferrer"
                     className="px-7 py-3.5 rounded-full bg-[#15803D] hover:bg-[#22B358] text-white text-[14px] font-semibold transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer w-full sm:w-auto whitespace-nowrap min-h-[48px] border border-white/20"
                   >
-                    <Play size={18} />
                     <span>Download for Android</span>
                   </motion.a>
                 ) : (
@@ -57,7 +52,6 @@ export function CTA() {
                     onClick={() => setModalOpen(true)}
                     className="px-7 py-3.5 rounded-full bg-[#15803D] hover:bg-[#22B358] text-white text-[14px] font-semibold transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer w-full sm:w-auto whitespace-nowrap min-h-[48px] border border-white/20"
                   >
-                    <Play size={18} />
                     <span>Download for Android</span>
                   </motion.button>
                 )}

@@ -10,20 +10,16 @@ import {
   Check,
   ChevronLeft,
   ChevronRight,
-  CirclePlay,
   ClipboardList,
   Home,
   MessageSquareText,
   ScanLine,
   Signal,
-  Smartphone,
-  Sparkles,
   Stethoscope,
   Sun,
   TrendingUp,
   User,
   Wifi,
-  Zap,
 } from "lucide-react";
 import { useRef } from "react";
 
@@ -258,11 +254,11 @@ export function Hero() {
               transition={{ duration: 0.65 }}
               className="text-[16px] leading-[26px] sm:text-[18px] sm:leading-[28px] text-[#3F4A44] max-w-xl text-pretty"
             >
-              Stop guessing — start glowing. Snap one 30-second selfie and
-              SkinLens instantly reads your skin, reveals your 0–100 health
-              score, and builds your perfect morning / afternoon / evening
-              routine for acne, dryness, eczema, oiliness and more. 100%
-              private, right on your phone — even offline.
+              Take a photo of your face and SkinLens checks it for acne,
+              dryness, eczema, oiliness or normal skin. A few follow-up
+              questions turn that into a 0–100 skin health score and a
+              morning, afternoon and evening routine. The scan runs on your
+              phone, so it works without internet.
             </motion.p>
 
             <motion.div
@@ -276,7 +272,6 @@ export function Hero() {
                 href="#download"
                 className="custom-pill-cta text-white text-[14px] font-medium px-7 py-3.5 rounded-full shadow-md transition-all flex items-center justify-center gap-2.5 w-full sm:w-auto min-h-[48px]"
               >
-                <Smartphone size={20} />
                 <span>Get the App</span>
               </motion.a>
               <motion.a
@@ -285,7 +280,6 @@ export function Hero() {
                 href="#diagnostics"
                 className="bg-white border border-[#E5EDE8] hover:bg-[#EAF6EE] text-[#10241A] text-[14px] font-medium px-6 py-3.5 rounded-full transition-all flex items-center justify-center gap-2 shadow-xs w-full sm:w-auto min-h-[48px]"
               >
-                <CirclePlay size={20} className="text-[#15803D]" />
                 <span>See How It Works</span>
               </motion.a>
             </motion.div>
@@ -304,12 +298,9 @@ export function Hero() {
               transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
               className="absolute -left-2 xl:-left-10 top-16 hidden lg:flex items-center gap-3 bg-white/95 backdrop-blur-md border border-[#E5EDE8] p-3.5 rounded-[20px] shadow-sm z-20 max-w-[230px]"
             >
-              <div className="w-10 h-10 rounded-full bg-[#EAF6EE] text-[#15803D] flex items-center justify-center">
-                <Zap size={20} />
-              </div>
               <div>
-                <p className="text-[12px] text-[#10241A] font-semibold">Private by Design</p>
-                <p className="text-[11px] text-[#6B7280]">Checked right on your phone</p>
+                <p className="text-[12px] text-[#10241A] font-semibold">Scans on Your Phone</p>
+                <p className="text-[11px] text-[#6B7280]">No internet needed to scan</p>
               </div>
             </motion.div>
 
@@ -318,12 +309,9 @@ export function Hero() {
               transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 0.6 }}
               className="absolute -right-2 xl:-right-10 bottom-16 hidden lg:flex items-center gap-3 bg-white/95 backdrop-blur-md border border-[#E5EDE8] p-3.5 rounded-[20px] shadow-sm z-20 max-w-[230px]"
             >
-              <div className="w-10 h-10 rounded-full bg-[#EAF6EE] text-[#15803D] flex items-center justify-center">
-                <Sparkles size={20} />
-              </div>
               <div>
-                <p className="text-[12px] text-[#10241A] font-semibold">Routine Ready</p>
-                <p className="text-[11px] text-[#6B7280]">Morning / afternoon / evening</p>
+                <p className="text-[12px] text-[#10241A] font-semibold">Daily Routine</p>
+                <p className="text-[11px] text-[#6B7280]">Morning, afternoon and evening</p>
               </div>
             </motion.div>
 

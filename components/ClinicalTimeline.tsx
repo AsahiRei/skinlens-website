@@ -2,13 +2,13 @@
 
 import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { ArrowUpRight, ScanFace, Sparkles, TrendingUp } from "lucide-react";
+import { ArrowUpRight, ScanFace } from "lucide-react";
 import { Reveal, SectionPill } from "./Reveal";
 
 const METRICS = [
-  { label: "Routine Adherence", delta: "AM / PM steps checked", width: 84 },
-  { label: "Sensitivity History", delta: "Logged per scan", width: 68 },
-  { label: "Health-Score Trend", delta: "0–100 over time", width: 54 },
+  { label: "Routine completion", delta: "Steps checked off", width: 84 },
+  { label: "Flare-up log", delta: "Triggers and severity", width: 68 },
+  { label: "Score history", delta: "0–100, scan by scan", width: 54 },
 ];
 
 function SkinCard({
@@ -60,11 +60,11 @@ function SkinCard({
       </div>
       <div className="mt-3 text-[12px] text-[#6B7280] space-y-1">
         <div className="flex justify-between">
-          <span>Transepidermal Water Loss:</span>
+          <span>Survey result:</span>
           <span className={`${tewlTone} font-medium`}>{tewl}</span>
         </div>
         <div className="flex justify-between">
-          <span>Targeted Active:</span>
+          <span>Key ingredients:</span>
           <span className="text-[#10241A] font-medium">{active}</span>
         </div>
       </div>
@@ -79,7 +79,7 @@ export function ClinicalTimeline() {
     <section className="py-14 sm:py-20 md:py-28 bg-white border-b border-[#E5EDE8]" id="clinical">
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 md:px-12">
         <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-10 space-y-3 px-1">
-          <SectionPill icon={<TrendingUp size={16} />}>Progress Tracking</SectionPill>
+          <SectionPill>Progress</SectionPill>
           <Reveal>
             <h2 className="font-display text-[26px] leading-[34px] sm:text-[40px] sm:leading-[48px] font-semibold text-[#10241A] text-balance">
               Watch Your Score Change Scan to Scan
@@ -87,9 +87,8 @@ export function ClinicalTimeline() {
           </Reveal>
           <Reveal delay={0.1}>
             <p className="text-[15px] sm:text-[16px] leading-relaxed text-[#3F4A44] text-pretty">
-              The Progress tab charts your 0–100 scores, routine completion and
-              sensitivity history — the same data you can share as a report
-              with your dermatologist.
+              Scan again after a few weeks on your routine and compare. The same
+              history can be exported as a PDF to show your dermatologist.
             </p>
           </Reveal>
           {/* Interactive view toggle */}
@@ -102,7 +101,7 @@ export function ClinicalTimeline() {
                   view === v ? "bg-[#10241A] text-white shadow" : "text-[#3F4A44] hover:text-[#10241A]"
                 }`}
               >
-                {v === "both" ? "Compare" : v === "day1" ? "Day 01" : "Day 28"}
+                {v === "both" ? "Compare" : v === "day1" ? "Earlier" : "Latest"}
               </button>
             ))}
           </div>
@@ -127,7 +126,7 @@ export function ClinicalTimeline() {
                       scoreTone="bg-[#FFFBEB] text-[#92400E]"
                       barrier="Detected: Acne"
                       barrierTone="bg-black/60"
-                      tewl="Survey: Fair band"
+                      tewl="Fair"
                       tewlTone="text-[#92400E]"
                       active="Salicylic Acid + Niacinamide"
                       gradient="bg-gradient-to-br from-[#e8b48c] via-[#d99a76] to-[#c98a68]"
@@ -150,7 +149,7 @@ export function ClinicalTimeline() {
                       scoreTone="bg-[#EAF6EE] text-[#15803D]"
                       barrier="Detected: Normal"
                       barrierTone="bg-[#14532D]/80"
-                      tewl="Survey: Good band"
+                      tewl="Good"
                       tewlTone="text-[#15803D]"
                       active="Vitamin C + Ceramides + SPF"
                       gradient="bg-gradient-to-br from-[#f3c9a5] via-[#eebd92] to-[#e2a87e]"
@@ -161,13 +160,13 @@ export function ClinicalTimeline() {
             </div>
 
             <div className="lg:col-span-5 space-y-5 sm:space-y-6 min-w-0">
-              <h3 className="font-display text-[20px] leading-[28px] sm:text-[24px] sm:leading-[32px] font-semibold text-[#10241A] flex items-center gap-2 text-balance">
-                <Sparkles size={22} className="text-[#15803D] shrink-0" />
-                Real App Data, Not Stock Photos
+              <h3 className="font-display text-[20px] leading-[28px] sm:text-[24px] sm:leading-[32px] font-semibold text-[#10241A] text-balance">
+                Every Scan Is Saved
               </h3>
               <p className="text-[15px] sm:text-[16px] leading-relaxed text-[#3F4A44] text-pretty">
-                Every scan saves your result, answers, score and routine, so
-                trends reflect your own history over time.
+                Each scan stores the result, your survey answers, the score and
+                the routine it produced. The Progress tab charts them, and the
+                weekly summary tells you what changed.
               </p>
               <div className="space-y-4">
                 {METRICS.map((m, i) => (

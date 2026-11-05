@@ -26,8 +26,7 @@ export function Footer() {
               <span>SkinLens</span>
             </div>
             <p className="text-[14px] leading-relaxed text-[#3f493f] text-pretty">
-              Simple skin checks, 0–100 scores, daily routines and progress
-              tracking.
+              Skin checks, scores and daily routines on your phone.
             </p>
           </div>
           <nav aria-label="Footer" className="flex flex-wrap gap-x-6 gap-y-3 text-[13px] font-semibold">
@@ -40,10 +39,9 @@ export function Footer() {
         </div>
         <div className="pt-6 border-t border-[#E5EDE8] flex flex-col gap-4 text-[11px] text-[#3f493f] leading-relaxed">
           <p>
-            © 2026 SkinLens. For routine wellness insights and tracking only —
-            this app does not replace a dermatologist and is not a medical
-            diagnosis. If you notice unusual, painful, or rapidly changing skin
-            conditions, please consult a doctor or visit a hospital.
+            © 2026 SkinLens. For information and education only. SkinLens is
+            not a medical diagnosis and does not replace a dermatologist. If a
+            skin concern is severe, painful or getting worse, see a doctor.
           </p>
         </div>
       </div>

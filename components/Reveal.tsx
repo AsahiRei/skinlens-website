@@ -35,22 +35,15 @@ export function Reveal({
   );
 }
 
-export function SectionPill({
-  icon,
-  children,
-}: {
-  icon: ReactNode;
-  children: ReactNode;
-}) {
+export function SectionPill({ children }: { children: ReactNode }) {
   return (
     <motion.span
       initial={{ opacity: 0, scale: 0.92 }}
       whileInView={{ opacity: 1, scale: 1 }}
       viewport={{ once: true }}
       transition={{ duration: 0.4 }}
-      className="inline-flex max-w-full items-center justify-center gap-1.5 px-3 py-1.5 rounded-full bg-[#EAF6EE] text-[#15803D] text-[11px] sm:text-[12px] leading-4 font-semibold tracking-wide text-center text-balance"
+      className="inline-flex max-w-full items-center justify-center px-3 py-1.5 rounded-full bg-[#EAF6EE] text-[#15803D] text-[11px] sm:text-[12px] leading-4 font-semibold tracking-wide text-center text-balance"
     >
-      {icon}
       {children}
     </motion.span>
   );

@@ -1,7 +1,6 @@
 "use client";
 
 import { motion } from "motion/react";
-import { Brain, CircleCheck, Cpu, Sun } from "lucide-react";
 import { Reveal, SectionPill } from "./Reveal";
 
 const STEPS = [
@@ -9,28 +8,25 @@ const STEPS = [
     n: "01",
     tag: "Capture",
     title: "Guided Photo",
-    body: "Center your face in the guide. The app helps with lighting and positioning, with front, left and right angles, or choose a photo from your gallery.",
-    icon: Sun,
-    line1: "Step-by-step guidance",
-    line2: "Good light · fill frame · hold still",
+    body: "Line your face up with the on-screen guide. The app tells you if the light is too dim or your face is off-center. You can also upload a photo instead.",
+    line1: "Before the shot",
+    line2: "Good light · fill the frame · hold still",
   },
   {
     n: "02",
     tag: "Analysis",
-    title: "Smart Check + Survey",
-    body: "Your photo is checked for acne, dry, eczema, oily or normal skin, your identity is verified, then a short survey measures severity.",
-    icon: Cpu,
-    line1: "Closest matches + face check",
-    line2: "Quick, private and secure",
+    title: "Scan + Survey",
+    body: "The app checks the photo for acne, dry, eczema, oily or normal skin and confirms it's your face, not someone else's. Then it asks a few questions about the condition.",
+    line1: "Match + face check",
+    line2: "Runs on your phone",
   },
   {
     n: "03",
     tag: "Action",
     title: "Score, Routine & Tracking",
-    body: "Get your 0–100 score and a morning, afternoon and evening routine, then follow your progress, chat for guidance, or share a report.",
-    icon: CircleCheck,
-    line1: "Clear score levels",
-    line2: "Steps · clinics · reports",
+    body: "You get a 0–100 score and a routine for the day. Scan again later to see if the score moves, or export a PDF report to bring to a dermatologist.",
+    line1: "Excellent · Good · Fair · Poor · Critical",
+    line2: "Routine · progress · reports",
   },
 ];
 
@@ -39,7 +35,7 @@ export function HowItWorks() {
     <section className="py-14 sm:py-20 md:py-28 bg-white border-b border-[#E5EDE8]" id="diagnostics">
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 md:px-12">
         <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-16 space-y-3 px-1">
-          <SectionPill icon={<Brain size={16} />}>How it works in the app</SectionPill>
+          <SectionPill>How it works</SectionPill>
           <Reveal>
             <h2 className="font-display text-[26px] leading-[34px] sm:text-[40px] sm:leading-[48px] font-semibold text-[#10241A] text-balance">
               Capture, Answer, Improve
@@ -47,8 +43,7 @@ export function HowItWorks() {
           </Reveal>
           <Reveal delay={0.1}>
             <p className="text-[15px] sm:text-[16px] leading-relaxed text-[#3F4A44] text-pretty">
-              Three simple steps: capture or upload, check your skin, then get
-              clear steps to follow.
+              Take a photo, answer a few questions, then follow the routine.
             </p>
           </Reveal>
         </div>
@@ -81,8 +76,7 @@ export function HowItWorks() {
                 <h3 className="font-display text-[20px] text-[#10241A] mb-3 font-semibold">{s.title}</h3>
                 <p className="text-[14px] text-[#3F4A44] leading-relaxed">{s.body}</p>
               </div>
-              <div className="mt-8 bg-white border border-[#E5EDE8] rounded-[16px] p-4 flex items-center gap-3">
-                <s.icon size={22} className="text-[#15803D] shrink-0" />
+              <div className="mt-8 bg-white border border-[#E5EDE8] rounded-[16px] p-4">
                 <div className="text-[12px]">
                   <p className="font-semibold text-[#10241A]">{s.line1}</p>
                   <p className="text-[#6B7280]">{s.line2}</p>

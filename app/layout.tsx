@@ -17,7 +17,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "SkinLens — AI Skin Analysis On Your Phone",
   description:
-    "SkinLens detects acne, dry, eczema, oily or normal skin right on your phone, gives you a 0–100 health score from your scan plus a short survey, and builds a morning/afternoon/evening routine. Works offline and keeps your progress saved.",
+    "A free Android app that checks a photo of your face for acne, dryness, eczema or oiliness, gives you a 0–100 skin health score, and builds a morning, afternoon and evening routine. The scan runs on your phone and works offline.",
   icons: {
     icon: "/skinlens-icon.png",
     apple: "/skinlens-icon.png",

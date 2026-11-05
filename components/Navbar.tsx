@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
-import { Download, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 
 const LINKS = [
   { label: "Features", href: "#technology", active: true },
@@ -135,8 +135,7 @@ export function Navbar() {
             className="custom-pill-cta text-white text-[13px] sm:text-[14px] font-medium px-4 sm:px-5 py-2 sm:py-2.5 rounded-full shadow-sm hover:opacity-95 transition-all flex items-center gap-2 whitespace-nowrap"
           >
             <span className="sm:hidden">Get App</span>
-            <span className="hidden sm:inline">Get Early Access</span>
-            <Download size={16} className="sm:w-[18px] sm:h-[18px]" />
+            <span className="hidden sm:inline">Get the App</span>
           </motion.a>
           <Link
             href="/admin"
