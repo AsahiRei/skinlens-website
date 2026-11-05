@@ -14,9 +14,12 @@ import {
   Ticket,
   Users,
   X,
+  Loader2,
+  FileText,
 } from "lucide-react";
 import {
   type Appointment,
+  type AppointmentStatus,
   type Clinic,
   type DoctorAccount,
   type InviteCode,
@@ -24,16 +27,19 @@ import {
 import { adminLogout } from "./actions";
 import {
   deleteClinicAction,
+  deleteCodeAction,
   generateCodeAction,
   revokeCodeAction,
   saveClinicAction,
   toggleClinicAction,
+  updateAppointmentStatusAction,
 } from "./data-actions";
 import { OverviewSection } from "./sections/OverviewSection";
 import { HospitalsSection } from "./sections/HospitalsSection";
 import { CodesSection } from "./sections/CodesSection";
 import { DoctorsSection } from "./sections/DoctorsSection";
 import { AppointmentsSection } from "./sections/AppointmentsSection";
+import { AuditLogsSection } from "./sections/AuditLogsSection";
 
 const SECTIONS = [
   { id: "overview", label: "Overview", icon: LayoutDashboard },
@@ -41,6 +47,7 @@ const SECTIONS = [
   { id: "codes", label: "Invite codes", icon: Ticket },
   { id: "doctors", label: "Doctors", icon: Users },
   { id: "appointments", label: "Appointments", icon: CalendarCheck },
+  { id: "audit", label: "Audit Logs", icon: FileText },
 ] as const;
 
 type SectionId = (typeof SECTIONS)[number]["id"];
@@ -61,7 +68,7 @@ export function AdminDashboard({
   const [clinics, setClinics] = useState<Clinic[]>(initialClinics);
   const [codes, setCodes] = useState(initialCodes);
   const [doctors] = useState(initialDoctors);
-  const [appointments] = useState(initialAppointments);
+  const [appointments, setAppointments] = useState(initialAppointments);
   const [codeClinicId, setCodeClinicId] = useState(initialClinics[0]?.id ?? "");
 
   const pending = appointments.filter((a) => a.status === "requested");
@@ -305,6 +312,17 @@ export function AdminDashboard({
                   setMutError(friendlyError(err));
                 });
               }}
+              onDelete={async (codeId) => {
+                let removed: InviteCode | undefined;
+                setCodes((prev) => {
+                  removed = prev.find((c) => c.id === codeId);
+                  return prev.filter((c) => c.id !== codeId);
+                });
+                deleteCodeAction(codeId).catch((err) => {
+                  if (removed) setCodes((prev) => [...prev, removed!]);
+                  setMutError(friendlyError(err));
+                });
+              }}
             />
           ) : null}
 
@@ -313,8 +331,32 @@ export function AdminDashboard({
           ) : null}
 
           {section === "appointments" ? (
-            <AppointmentsSection appointments={appointments} />
+            <AppointmentsSection
+              appointments={appointments}
+              onError={(message) => setMutError(friendlyError(new Error(message)))}
+              onStatusChange={(id, status) => {
+                setMutError(null);
+                let prevStatus: AppointmentStatus | undefined;
+                setAppointments((prev) => {
+                  prevStatus = prev.find((a) => a.id === id)?.status;
+                  return prev.map((a) => (a.id === id ? { ...a, status } : a));
+                });
+                updateAppointmentStatusAction(id, status).catch((err) => {
+                  // Roll back the pill if the server rejected the change.
+                  setAppointments((prev) =>
+                    prev.map((a) =>
+                      a.id === id && prevStatus
+                        ? { ...a, status: prevStatus }
+                        : a
+                    )
+                  );
+                  setMutError(friendlyError(err));
+                });
+              }}
+            />
           ) : null}
+
+          {section === "audit" ? <AuditLogsSection /> : null}
         </motion.div>
       </div>
 
@@ -328,6 +370,8 @@ export function AdminDashboard({
 }
 
 function LogoutConfirmModal({ onClose }: { onClose: () => void }) {
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -340,6 +384,11 @@ function LogoutConfirmModal({ onClose }: { onClose: () => void }) {
       document.body.style.overflow = prev;
     };
   }, [onClose]);
+
+  async function handleLogout(formData: FormData) {
+    setIsLoggingOut(true);
+    await adminLogout(formData);
+  }
 
   return (
     <motion.div
@@ -381,16 +430,22 @@ function LogoutConfirmModal({ onClose }: { onClose: () => void }) {
         <div className="mt-5 flex flex-col-reverse sm:flex-row gap-2">
           <button
             onClick={onClose}
-            className="flex-1 px-5 py-3 rounded-full bg-white border border-[#E5EDE8] text-[#10241A] text-[14px] font-medium hover:bg-[#EAF6EE] min-h-[48px] active:scale-[0.98]"
+            disabled={isLoggingOut}
+            className="flex-1 px-5 py-3 rounded-full bg-white border border-[#E5EDE8] text-[#10241A] text-[14px] font-medium hover:bg-[#EAF6EE] min-h-[48px] active:scale-[0.98] disabled:opacity-50"
           >
             Cancel
           </button>
-          <form action={adminLogout} className="flex-1">
+          <form action={handleLogout} className="flex-1">
             <button
               type="submit"
-              className="w-full px-5 py-3 rounded-full custom-pill-cta text-white text-[14px] font-medium shadow-md flex items-center justify-center min-h-[48px] active:scale-[0.98]"
+              disabled={isLoggingOut}
+              className="w-full px-5 py-3 rounded-full custom-pill-cta text-white text-[14px] font-medium shadow-md flex items-center justify-center min-h-[48px] active:scale-[0.98] disabled:opacity-70"
             >
-              Log out
+              {isLoggingOut ? (
+                <Loader2 size={18} className="animate-spin" />
+              ) : (
+                "Log out"
+              )}
             </button>
           </form>
         </div>

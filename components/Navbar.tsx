@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
 import { Download, Menu, X } from "lucide-react";
 
@@ -137,6 +138,12 @@ export function Navbar() {
             <span className="hidden sm:inline">Get Early Access</span>
             <Download size={16} className="sm:w-[18px] sm:h-[18px]" />
           </motion.a>
+          <Link
+            href="/admin"
+            className="hidden sm:flex items-center px-3 py-2 text-[13px] font-medium text-[#3f493f] hover:text-[#00652c] transition-colors rounded-full border border-[#E5EDE8] hover:border-[#00652c] hover:bg-[#F4F7F5]"
+          >
+            Admin
+          </Link>
           <button
             aria-label="Toggle menu"
             aria-expanded={open}
@@ -174,6 +181,20 @@ export function Navbar() {
                   </a>
                 </motion.div>
               ))}
+              <motion.div
+                initial={{ x: -12, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ delay: LINKS.length * 0.05 }}
+                className="pt-2 mt-2 border-t border-[#E5EDE8]"
+              >
+                <Link
+                  href="/admin"
+                  onClick={() => setOpen(false)}
+                  className="py-3 px-3 rounded-xl text-[15px] font-medium text-[#10241A] hover:bg-[#EAF6EE] active:bg-[#EAF6EE] min-h-[44px] flex items-center cursor-pointer"
+                >
+                  Admin Login
+                </Link>
+              </motion.div>
             </div>
           </motion.nav>
         )}

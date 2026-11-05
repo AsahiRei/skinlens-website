@@ -27,28 +27,24 @@ export function OverviewSection({
           icon={Building}
           value={String(hospitalCount)}
           label="Hospitals"
-          foot="Verified locations"
         />
         <StatCard
           index={1}
           icon={Users}
           value={String(doctorCount)}
           label="Doctors"
-          foot="Registered via code"
         />
         <StatCard
           index={2}
           icon={Inbox}
           value={String(pendingCount)}
           label="Pending requests"
-          foot="Waiting for a doctor"
         />
         <StatCard
           index={3}
           icon={CalendarCheck}
           value={String(todayCount)}
           label="Scheduled"
-          foot="Confirmed appointments"
         />
       </div>
 

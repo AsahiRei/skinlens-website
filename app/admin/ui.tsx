@@ -14,7 +14,7 @@ export function StatCard({
   icon: React.ComponentType<{ size?: number | string; className?: string }>;
   value: string;
   label: string;
-  foot: string;
+  foot?: string;
   index?: number;
 }) {
   return (
@@ -40,15 +40,17 @@ export function StatCard({
           {label}
         </h3>
       </div>
-      <div className="pt-4 border-t border-[#EEF2EF] mt-5 flex items-center justify-between text-[12px] text-[#15803D] font-semibold">
-        <span>{foot}</span>
-        <ArrowRight size={18} />
-      </div>
+      {foot && (
+        <div className="pt-4 border-t border-[#EEF2EF] mt-5 flex items-center justify-between text-[12px] text-[#15803D] font-semibold">
+          <span>{foot}</span>
+          <ArrowRight size={18} />
+        </div>
+      )}
     </motion.div>
   );
 }
 
-const STATUS_STYLES: Record<AppointmentStatus, string> = {
+export const STATUS_STYLES: Record<AppointmentStatus, string> = {
   requested:
     "bg-[#FFFBEB] border-[#FDE68A] text-[#92400E]",
   scheduled:

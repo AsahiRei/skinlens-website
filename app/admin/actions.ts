@@ -30,7 +30,7 @@ export async function adminLogin(
     httpOnly: true,
     sameSite: "strict",
     secure: process.env.NODE_ENV === "production",
-    path: ADMIN_PATH,
+    path: "/",
     maxAge: 12 * 60 * 60,
   });
 
@@ -40,5 +40,5 @@ export async function adminLogin(
 export async function adminLogout(): Promise<void> {
   const cookieStore = await cookies();
   cookieStore.delete(getAdminCookieName());
-  redirect(ADMIN_PATH);
+  redirect("/");
 }
