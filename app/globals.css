@@ -58,6 +58,26 @@ svg {
   background: linear-gradient(to right, #214e36, #10241a);
 }
 
+/* green horizontal scrollbar (admin section tabs) */
+.green-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #15803d #eaf6ee;
+}
+.green-scroll::-webkit-scrollbar {
+  height: 6px;
+}
+.green-scroll::-webkit-scrollbar-track {
+  background: #eaf6ee;
+  border-radius: 9999px;
+}
+.green-scroll::-webkit-scrollbar-thumb {
+  background: linear-gradient(to right, #22b358, #15803d);
+  border-radius: 9999px;
+}
+.green-scroll::-webkit-scrollbar-thumb:hover {
+  background: #14532d;
+}
+
 .custom-badge-icon {
   background: linear-gradient(135deg, #22b358, #15803d);
 }

@@ -9,8 +9,10 @@ import { ClinicalTimeline } from "@/components/ClinicalTimeline";
 import { FAQ } from "@/components/FAQ";
 import { CTA } from "@/components/CTA";
 import { Footer } from "@/components/Footer";
+import { getDownloadUrl } from "@/lib/site-settings";
 
-export default function Home() {
+export default async function Home() {
+  const downloadUrl = await getDownloadUrl();
   return (
     <div className="flex flex-col flex-1 min-w-0 overflow-x-clip">
       <SplashScreen />
@@ -23,7 +25,7 @@ export default function Home() {
         <Privacy />
         <ClinicalTimeline />
         <FAQ />
-        <CTA />
+        <CTA downloadUrl={downloadUrl} />
       </main>
       <Footer />
     </div>

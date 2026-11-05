@@ -36,10 +36,11 @@ export function AdminLogin() {
             <Image
               src="/skinlens-icon.png"
               alt="SkinLens app icon"
-              width={40}
-              height={40}
+              width={80}
+              height={80}
+              preload
               className="w-20 h-20 rounded-full object-cover shadow-sm ring-1 ring-[#E5EDE8]"
-            />   
+            />
           </div>
           <h1 className="font-display text-[26px] leading-[34px] sm:text-[32px] sm:leading-[40px] font-semibold tracking-tight text-[#10241A] text-center mt-3">
             Admin {" "}

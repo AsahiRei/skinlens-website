@@ -2,7 +2,8 @@
 
 import { randomInt } from "node:crypto";
 import { cookies } from "next/headers";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
+import { DOWNLOAD_URL_TAG, normalizeDownloadUrl } from "@/lib/site-settings";
 import { getAdminCookieName, verifyAdminToken } from "@/lib/admin-session";
 import { getSupabaseAdmin, missingSupabaseEnv } from "@/lib/supabase-admin";
 import { toDisplayDate } from "@/lib/admin-db";
@@ -457,6 +458,49 @@ export async function reassignDoctorAction(
 
   revalidatePath("/admin");
   return { releasedIds };
+}
+
+// ── landing-page download link ───────────────────────────────────────────
+
+export async function saveDownloadUrlAction(
+  input: string
+): Promise<{ error?: string; url?: string }> {
+  await requireAdmin();
+  const url = normalizeDownloadUrl(input);
+  if (url === null) {
+    return { error: "Enter a full link starting with https://, or leave it empty." };
+  }
+  const db = requireDb();
+
+  const { data: old } = await db
+    .from("site_settings")
+    .select("value")
+    .eq("key", "download_url")
+    .maybeSingle();
+
+  const { error } = await db
+    .from("site_settings")
+    .upsert({ key: "download_url", value: url, updated_at: new Date().toISOString() });
+  if (error) {
+    if (/site_settings/.test(error.message)) {
+      return {
+        error: "The site_settings table is missing. Run migration 0013_site_settings.sql in the Supabase SQL Editor.",
+      };
+    }
+    return { error: error.message };
+  }
+
+  await logAuditAction(
+    "UPDATE_DOWNLOAD_URL",
+    "site_settings",
+    null,
+    { download_url: old?.value ?? null },
+    { download_url: url }
+  );
+
+  updateTag(DOWNLOAD_URL_TAG);
+  revalidatePath("/admin");
+  return { url };
 }
 
 // ── AI validation stats ──────────────────────────────────────────────────

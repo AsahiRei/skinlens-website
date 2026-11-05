@@ -5,13 +5,10 @@ import { motion } from "motion/react";
 import { Reveal } from "./Reveal";
 import { DownloadModal } from "./DownloadModal";
 
-// TODO: paste the Google Play URL when live — modal shows while empty.
-const PLAY_STORE_URL: string = "";
-
-export function CTA() {
+// Set from /admin → Download link. Empty shows the "Coming soon" modal.
+export function CTA({ downloadUrl }: { downloadUrl: string }) {
   const [modalOpen, setModalOpen] = useState(false);
-  const hasStoreUrl =
-    Boolean(PLAY_STORE_URL) && PLAY_STORE_URL !== "#";
+  const hasStoreUrl = Boolean(downloadUrl);
 
   return (
     <section className="py-14 sm:py-20 md:py-28 bg-white" id="download">
@@ -37,7 +34,7 @@ export function CTA() {
                   <motion.a
                     whileHover={{ scale: 1.03 }}
                     whileTap={{ scale: 0.97 }}
-                    href={PLAY_STORE_URL}
+                    href={downloadUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="px-7 py-3.5 rounded-full bg-[#15803D] hover:bg-[#22B358] text-white text-[14px] font-semibold transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer w-full sm:w-auto whitespace-nowrap min-h-[48px] border border-white/20"

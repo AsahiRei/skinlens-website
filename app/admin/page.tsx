@@ -7,6 +7,7 @@ import { AdminLogin } from "./AdminLogin";
 import { AdminDashboard } from "./AdminDashboard";
 import { getAdminCookieName, verifyAdminToken } from "@/lib/admin-session";
 import { getAdminData, type AdminData } from "@/lib/admin-db";
+import { getDownloadUrl } from "@/lib/site-settings";
 
 export default function AdminPage() {
   return (
@@ -48,6 +49,7 @@ async function AdminGate() {
       initialCodes={data.codes}
       initialDoctors={data.doctors}
       initialAppointments={data.appointments}
+      initialDownloadUrl={await getDownloadUrl()}
     />
   );
 }

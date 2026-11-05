@@ -17,6 +17,7 @@ import {
   Loader2,
   FileText,
   ShieldCheck,
+  Download,
 } from "lucide-react";
 import {
   type Appointment,
@@ -32,6 +33,7 @@ import {
   generateCodeAction,
   reassignDoctorAction,
   revokeCodeAction,
+  saveDownloadUrlAction,
   saveClinicAction,
   setDoctorActiveAction,
   toggleClinicAction,
@@ -44,6 +46,7 @@ import { DoctorsSection } from "./sections/DoctorsSection";
 import { AppointmentsSection } from "./sections/AppointmentsSection";
 import { AuditLogsSection } from "./sections/AuditLogsSection";
 import { ValidationSection } from "./sections/ValidationSection";
+import { DownloadSection } from "./sections/DownloadSection";
 import { ToastProvider, useToast } from "./toast";
 
 const SECTIONS = [
@@ -53,6 +56,7 @@ const SECTIONS = [
   { id: "doctors", label: "Doctors", icon: Users },
   { id: "appointments", label: "Appointments", icon: CalendarCheck },
   { id: "validation", label: "AI validation", icon: ShieldCheck },
+  { id: "download", label: "Download link", icon: Download },
   { id: "audit", label: "Audit Logs", icon: FileText },
 ] as const;
 
@@ -63,6 +67,7 @@ type AdminDashboardProps = {
   initialCodes: InviteCode[];
   initialDoctors: DoctorAccount[];
   initialAppointments: Appointment[];
+  initialDownloadUrl: string;
 };
 
 export function AdminDashboard(props: AdminDashboardProps) {
@@ -78,6 +83,7 @@ function AdminDashboardContent({
   initialCodes,
   initialDoctors,
   initialAppointments,
+  initialDownloadUrl,
 }: AdminDashboardProps) {
   const toast = useToast();
   const [section, setSection] = useState<SectionId>("overview");
@@ -86,6 +92,7 @@ function AdminDashboardContent({
   const [codes, setCodes] = useState(initialCodes);
   const [doctors, setDoctors] = useState(initialDoctors);
   const [appointments, setAppointments] = useState(initialAppointments);
+  const [downloadUrl, setDownloadUrl] = useState(initialDownloadUrl);
   const [codeClinicId, setCodeClinicId] = useState(initialClinics[0]?.id ?? "");
 
   const pending = appointments.filter((a) => a.status === "requested");
@@ -210,7 +217,7 @@ function AdminDashboardContent({
         {/* Section nav */}
         <nav
           aria-label="Admin sections"
-          className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1"
+          className="green-scroll flex gap-2 overflow-x-auto pb-2 -mx-1 px-1"
         >
           {SECTIONS.map((s) => {
             const Icon = s.icon;
@@ -219,13 +226,13 @@ function AdminDashboardContent({
               <button
                 key={s.id}
                 onClick={() => setSection(s.id)}
-                className={`px-5 py-2.5 rounded-full text-[13px] sm:text-[14px] font-medium flex items-center gap-2 whitespace-nowrap transition-all min-h-[44px] active:scale-[0.98] ${
+                className={`px-5 py-2.5 rounded-full text-[13px] sm:text-[14px] font-medium flex items-center gap-2 shrink-0 whitespace-nowrap transition-all min-h-[44px] active:scale-[0.98] ${
                   active
                     ? "custom-pill-cta text-white shadow-md"
                     : "bg-white border border-[#E5EDE8] text-[#3f493f] hover:bg-[#EAF6EE] hover:text-[#00652c]"
                 }`}
               >
-                <Icon size={16} />
+                <Icon size={16} className="shrink-0" aria-hidden />
                 {s.label}
               </button>
             );
@@ -451,6 +458,31 @@ function AdminDashboardContent({
           ) : null}
 
           {section === "validation" ? <ValidationSection /> : null}
+
+          {section === "download" ? (
+            <DownloadSection
+              url={downloadUrl}
+              onSave={async (next) => {
+                try {
+                  const res = await saveDownloadUrlAction(next);
+                  if (res.error) {
+                    toast.error(res.error);
+                    return false;
+                  }
+                  setDownloadUrl(res.url ?? "");
+                  toast.success(
+                    res.url
+                      ? "Download link saved. The landing page now uses it."
+                      : "Download link cleared. The landing page shows \"Coming soon\"."
+                  );
+                  return true;
+                } catch (err) {
+                  showError(err);
+                  return false;
+                }
+              }}
+            />
+          ) : null}
 
           {section === "audit" ? <AuditLogsSection /> : null}
         </motion.div>
