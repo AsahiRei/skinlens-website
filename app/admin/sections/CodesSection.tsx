@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import type { Clinic, InviteCode } from "@/lib/admin-types";
 import { Panel } from "../ui";
+import { useToast } from "../toast";
 
 export function CodesSection({
   clinics,
@@ -33,6 +34,7 @@ export function CodesSection({
   onRevoke: (codeId: string) => void;
   onDelete: (codeId: string) => void;
 }) {
+  const toast = useToast();
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<InviteCode | null>(null);
@@ -45,7 +47,9 @@ export function CodesSection({
       setCopiedId(id);
       window.setTimeout(() => setCopiedId((v) => (v === id ? null : v)), 1500);
     } catch {
-      /* clipboard unavailable — code is still visible to copy manually */
+      // Clipboard blocked (permissions / insecure context). The code is
+      // still on screen, so say so instead of failing silently.
+      toast.error(`Couldn't copy ${code}. Select it and copy it manually.`);
     }
   };
 

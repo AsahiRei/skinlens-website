@@ -1,4 +1,9 @@
-import { getSupabaseAdmin, missingSupabaseEnv } from "./supabase-admin";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import {
+  getSupabaseAdmin,
+  isReadOnlyMode,
+  missingSupabaseEnv,
+} from "./supabase-admin";
 import type {
   Appointment,
   Clinic,
@@ -24,6 +29,27 @@ export function toDisplayDate(value: string | null): string {
     hour: "numeric",
     minute: "2-digit",
   });
+}
+
+/**
+ * Doctor login emails live in auth.users, which only the Auth admin API can
+ * read (needs the secret key). Best-effort: with the publishable key, or if
+ * a lookup fails, the email is just left blank.
+ */
+async function getDoctorEmails(
+  db: SupabaseClient,
+  ids: string[]
+): Promise<Map<string, string>> {
+  const emails = new Map<string, string>();
+  if (ids.length === 0 || isReadOnlyMode()) return emails;
+  const results = await Promise.allSettled(
+    ids.map((id) => db.auth.admin.getUserById(id))
+  );
+  results.forEach((r, i) => {
+    const email = r.status === "fulfilled" ? r.value.data.user?.email : null;
+    if (email) emails.set(ids[i], email);
+  });
+  return emails;
 }
 
 // ── live reads (no mock fallback — throws when Supabase is unreachable) ───
@@ -93,12 +119,16 @@ export async function getAdminData(): Promise<AdminData> {
     })
   );
 
-  const doctors: DoctorAccount[] = (
-    (doctorsRes.data ?? []) as Record<string, unknown>[]
-  ).map((d) => ({
+  const doctorRows = (doctorsRes.data ?? []) as Record<string, unknown>[];
+  const emailById = await getDoctorEmails(
+    db,
+    doctorRows.map((d) => d.user_id as string)
+  );
+
+  const doctors: DoctorAccount[] = doctorRows.map((d) => ({
     id: d.user_id as string,
     name: (d.display_name as string) || "Doctor",
-    email: "",
+    email: emailById.get(d.user_id as string) ?? "",
     clinicId: d.clinic_id as string,
     specialty: (d.specialty as string) ?? "Dermatology",
     registeredAt: toDisplayDate(d.created_at as string),

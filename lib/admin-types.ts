@@ -58,12 +58,6 @@ export type Appointment = {
   hasPdf: boolean;
 };
 
-/** Random `SKN-XXXXXX` code (used by the generate-code server action). */
-export function generateInviteCode(): string {
-  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-  let suffix = "";
-  for (let i = 0; i < 6; i++) {
-    suffix += chars[Math.floor(Math.random() * chars.length)];
-  }
-  return `SKN-${suffix}`;
-}
+/** Below this many doctor reviews an agreement rate is noise, so the
+ *  validation dashboard shows "too few reviews" instead of a percentage. */
+export const MIN_REVIEWS_FOR_RATE = 5;

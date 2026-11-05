@@ -16,6 +16,7 @@ import {
   X,
   Loader2,
   FileText,
+  ShieldCheck,
 } from "lucide-react";
 import {
   type Appointment,
@@ -29,8 +30,10 @@ import {
   deleteClinicAction,
   deleteCodeAction,
   generateCodeAction,
+  reassignDoctorAction,
   revokeCodeAction,
   saveClinicAction,
+  setDoctorActiveAction,
   toggleClinicAction,
   updateAppointmentStatusAction,
 } from "./data-actions";
@@ -40,6 +43,8 @@ import { CodesSection } from "./sections/CodesSection";
 import { DoctorsSection } from "./sections/DoctorsSection";
 import { AppointmentsSection } from "./sections/AppointmentsSection";
 import { AuditLogsSection } from "./sections/AuditLogsSection";
+import { ValidationSection } from "./sections/ValidationSection";
+import { ToastProvider, useToast } from "./toast";
 
 const SECTIONS = [
   { id: "overview", label: "Overview", icon: LayoutDashboard },
@@ -47,27 +52,39 @@ const SECTIONS = [
   { id: "codes", label: "Invite codes", icon: Ticket },
   { id: "doctors", label: "Doctors", icon: Users },
   { id: "appointments", label: "Appointments", icon: CalendarCheck },
+  { id: "validation", label: "AI validation", icon: ShieldCheck },
   { id: "audit", label: "Audit Logs", icon: FileText },
 ] as const;
 
 type SectionId = (typeof SECTIONS)[number]["id"];
 
-export function AdminDashboard({
-  initialClinics,
-  initialCodes,
-  initialDoctors,
-  initialAppointments,
-}: {
+type AdminDashboardProps = {
   initialClinics: Clinic[];
   initialCodes: InviteCode[];
   initialDoctors: DoctorAccount[];
   initialAppointments: Appointment[];
-}) {
+};
+
+export function AdminDashboard(props: AdminDashboardProps) {
+  return (
+    <ToastProvider>
+      <AdminDashboardContent {...props} />
+    </ToastProvider>
+  );
+}
+
+function AdminDashboardContent({
+  initialClinics,
+  initialCodes,
+  initialDoctors,
+  initialAppointments,
+}: AdminDashboardProps) {
+  const toast = useToast();
   const [section, setSection] = useState<SectionId>("overview");
   const [logoutOpen, setLogoutOpen] = useState(false);
   const [clinics, setClinics] = useState<Clinic[]>(initialClinics);
   const [codes, setCodes] = useState(initialCodes);
-  const [doctors] = useState(initialDoctors);
+  const [doctors, setDoctors] = useState(initialDoctors);
   const [appointments, setAppointments] = useState(initialAppointments);
   const [codeClinicId, setCodeClinicId] = useState(initialClinics[0]?.id ?? "");
 
@@ -87,7 +104,26 @@ export function AdminDashboard({
 
   // Write buttons (add/edit/generate/...) need a privileged key. With only
   // the publishable key they fail — show why instead of crashing.
-  const [mutError, setMutError] = useState<string | null>(null);
+
+  // Open visits a doctor lost (deactivated / moved) are back in the queue.
+  const markReleased = (ids: string[]) => {
+    if (ids.length === 0) return;
+    const set = new Set(ids);
+    setAppointments((prev) =>
+      prev.map((a) =>
+        set.has(a.id)
+          ? { ...a, status: "requested", doctorName: null, scheduledAt: null }
+          : a
+      )
+    );
+  };
+  const clinicLabel = (id: string) =>
+    clinics.find((c) => c.id === id)?.name ?? "The hospital";
+  const releasedNotice = (ids: string[]) =>
+    ids.length > 0
+      ? ` ${ids.length} open appointment${ids.length === 1 ? " was" : "s were"} returned to the hospital queue.`
+      : "";
+  const showError = (err: unknown) => toast.error(friendlyError(err));
   const friendlyError = (err: unknown): string => {
     const msg = err instanceof Error ? err.message : "Save failed.";
     if (/row-level security/i.test(msg)) {
@@ -203,22 +239,6 @@ export function AdminDashboard({
           transition={{ duration: 0.4 }}
           className="mt-6"
         >
-          {mutError ? (
-            <div
-              role="alert"
-              className="mb-4 flex flex-wrap items-center justify-between gap-2 rounded-[16px] bg-[#FEF3F2] border border-[#FECDCA] px-4 py-3"
-            >
-              <p className="text-[13px] font-medium text-[#B42318]">
-                {mutError}
-              </p>
-              <button
-                onClick={() => setMutError(null)}
-                className="text-[13px] font-semibold text-[#B42318] underline underline-offset-2"
-              >
-                Dismiss
-              </button>
-            </div>
-          ) : null}
           {section === "overview" ? (
             <OverviewSection
               hospitalCount={clinics.filter((c) => c.isActive).length}
@@ -239,32 +259,43 @@ export function AdminDashboard({
                 setClinics((cs) =>
                   cs.map((c) => (c.id === id ? { ...c, isActive: next } : c))
                 );
-                toggleClinicAction(id, next).catch((err) => {
-                  // Roll back on failure.
-                  setClinics((cs) =>
-                    cs.map((c) =>
-                      c.id === id ? { ...c, isActive: !next } : c
+                const name = clinicLabel(id);
+                toggleClinicAction(id, next)
+                  .then(() =>
+                    toast.success(
+                      next
+                        ? `${name} is active and visible in the app.`
+                        : `${name} is hidden from the app.`
                     )
-                  );
-                  setMutError(friendlyError(err));
-                });
+                  )
+                  .catch((err) => {
+                    // Roll back on failure.
+                    setClinics((cs) =>
+                      cs.map((c) =>
+                        c.id === id ? { ...c, isActive: !next } : c
+                      )
+                    );
+                    showError(err);
+                  });
               }}
               onSave={async (clinic) => {
-                setMutError(null);
                 try {
                   const saved = await saveClinicAction(clinic);
+                  const isNew = !clinics.some((c) => c.id === saved.id);
                   setClinics((cs) => {
                     const exists = cs.some((c) => c.id === saved.id);
                     return exists
                       ? cs.map((c) => (c.id === saved.id ? saved : c))
                       : [...cs, saved];
                   });
+                  toast.success(isNew ? `${saved.name} added.` : `${saved.name} saved.`);
+                  return true;
                 } catch (err) {
-                  setMutError(friendlyError(err));
+                  showError(err);
+                  return false;
                 }
               }}
               onDelete={(id) => {
-                setMutError(null);
                 const removed = clinics.find((c) => c.id === id);
                 setClinics((cs) => cs.filter((c) => c.id !== id));
                 // Keep the invite-code tab pointing at a hospital that exists.
@@ -272,11 +303,19 @@ export function AdminDashboard({
                   const remaining = clinics.filter((c) => c.id !== id);
                   setCodeClinicId(remaining[0]?.id ?? "");
                 }
-                deleteClinicAction(id).catch((err) => {
-                  // Roll back on failure (e.g. linked doctors/codes block it).
+                const rollback = (message: string) => {
+                  // e.g. the hospital still has doctors or appointments.
                   if (removed) setClinics((cs) => [...cs, removed]);
-                  setMutError(friendlyError(err));
-                });
+                  toast.error(message);
+                };
+                deleteClinicAction(id)
+                  .then((res) => {
+                    if (res.error) return rollback(res.error);
+                    // Its invite codes were deleted with it (FK cascade).
+                    setCodes((prev) => prev.filter((c) => c.clinicId !== id));
+                    toast.success(`${removed?.name ?? "Hospital"} deleted.`);
+                  })
+                  .catch((err) => rollback(friendlyError(err)));
               }}
               onManageCodes={goCodes}
             />
@@ -289,12 +328,12 @@ export function AdminDashboard({
               selectedClinicId={codeClinicId}
               onSelectClinic={setCodeClinicId}
               onGenerate={async (clinicId) => {
-                setMutError(null);
                 try {
                   const created = await generateCodeAction(clinicId);
                   setCodes((prev) => [created, ...prev]);
+                  toast.success(`Code ${created.code} created for ${clinicLabel(clinicId)}.`);
                 } catch (err) {
-                  setMutError(friendlyError(err));
+                  showError(err);
                 }
               }}
               onRevoke={async (codeId) => {
@@ -303,14 +342,17 @@ export function AdminDashboard({
                     c.id === codeId ? { ...c, isActive: false } : c
                   )
                 );
-                revokeCodeAction(codeId).catch((err) => {
-                  setCodes((prev) =>
-                    prev.map((c) =>
-                      c.id === codeId ? { ...c, isActive: true } : c
-                    )
-                  );
-                  setMutError(friendlyError(err));
-                });
+                const code = codes.find((c) => c.id === codeId)?.code ?? "Code";
+                revokeCodeAction(codeId)
+                  .then(() => toast.success(`${code} revoked. It can no longer be used.`))
+                  .catch((err) => {
+                    setCodes((prev) =>
+                      prev.map((c) =>
+                        c.id === codeId ? { ...c, isActive: true } : c
+                      )
+                    );
+                    showError(err);
+                  });
               }}
               onDelete={async (codeId) => {
                 let removed: InviteCode | undefined;
@@ -318,43 +360,97 @@ export function AdminDashboard({
                   removed = prev.find((c) => c.id === codeId);
                   return prev.filter((c) => c.id !== codeId);
                 });
-                deleteCodeAction(codeId).catch((err) => {
-                  if (removed) setCodes((prev) => [...prev, removed!]);
-                  setMutError(friendlyError(err));
-                });
+                const code = codes.find((c) => c.id === codeId)?.code ?? "Code";
+                deleteCodeAction(codeId)
+                  .then(() => toast.success(`${code} deleted.`))
+                  .catch((err) => {
+                    if (removed) setCodes((prev) => [...prev, removed!]);
+                    showError(err);
+                  });
               }}
             />
           ) : null}
 
           {section === "doctors" ? (
-            <DoctorsSection doctors={doctors} clinics={clinics} />
+            <DoctorsSection
+              doctors={doctors}
+              clinics={clinics}
+              onSetActive={async (doctorId, isActive) => {
+                const name = doctors.find((d) => d.id === doctorId)?.name ?? "Doctor";
+                try {
+                  const res = await setDoctorActiveAction(doctorId, isActive);
+                  if (res.error) {
+                    toast.error(res.error);
+                    return;
+                  }
+                  setDoctors((prev) =>
+                    prev.map((d) => (d.id === doctorId ? { ...d, isActive } : d))
+                  );
+                  const ids = res.releasedIds ?? [];
+                  markReleased(ids);
+                  toast.success(
+                    (isActive ? `${name} activated.` : `${name} deactivated.`) +
+                      releasedNotice(ids)
+                  );
+                } catch (err) {
+                  showError(err);
+                }
+              }}
+              onReassign={async (doctorId, clinicId) => {
+                const name = doctors.find((d) => d.id === doctorId)?.name ?? "Doctor";
+                try {
+                  const res = await reassignDoctorAction(doctorId, clinicId);
+                  if (res.error) {
+                    toast.error(res.error);
+                    return;
+                  }
+                  setDoctors((prev) =>
+                    prev.map((d) => (d.id === doctorId ? { ...d, clinicId } : d))
+                  );
+                  const ids = res.releasedIds ?? [];
+                  markReleased(ids);
+                  toast.success(
+                    `${name} moved to ${clinicLabel(clinicId)}.` + releasedNotice(ids)
+                  );
+                } catch (err) {
+                  showError(err);
+                }
+              }}
+            />
           ) : null}
 
           {section === "appointments" ? (
             <AppointmentsSection
               appointments={appointments}
-              onError={(message) => setMutError(friendlyError(new Error(message)))}
+              onError={(message) => showError(new Error(message))}
               onStatusChange={(id, status) => {
-                setMutError(null);
                 let prevStatus: AppointmentStatus | undefined;
                 setAppointments((prev) => {
                   prevStatus = prev.find((a) => a.id === id)?.status;
                   return prev.map((a) => (a.id === id ? { ...a, status } : a));
                 });
-                updateAppointmentStatusAction(id, status).catch((err) => {
-                  // Roll back the pill if the server rejected the change.
-                  setAppointments((prev) =>
-                    prev.map((a) =>
-                      a.id === id && prevStatus
-                        ? { ...a, status: prevStatus }
-                        : a
-                    )
-                  );
-                  setMutError(friendlyError(err));
-                });
+                const patient =
+                  appointments.find((a) => a.id === id)?.patientName ?? "Patient";
+                updateAppointmentStatusAction(id, status)
+                  .then(() =>
+                    toast.success(`${patient}'s appointment marked ${status}.`)
+                  )
+                  .catch((err) => {
+                    // Roll back the pill if the server rejected the change.
+                    setAppointments((prev) =>
+                      prev.map((a) =>
+                        a.id === id && prevStatus
+                          ? { ...a, status: prevStatus }
+                          : a
+                      )
+                    );
+                    showError(err);
+                  });
               }}
             />
           ) : null}
+
+          {section === "validation" ? <ValidationSection /> : null}
 
           {section === "audit" ? <AuditLogsSection /> : null}
         </motion.div>
@@ -385,9 +481,9 @@ function LogoutConfirmModal({ onClose }: { onClose: () => void }) {
     };
   }, [onClose]);
 
-  async function handleLogout(formData: FormData) {
+  async function handleLogout() {
     setIsLoggingOut(true);
-    await adminLogout(formData);
+    await adminLogout();
   }
 
   return (

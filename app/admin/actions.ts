@@ -3,6 +3,7 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import {
+  adminConfigError,
   createAdminToken,
   getAdminCookieName,
   isAdminPassword,
@@ -14,6 +15,12 @@ export async function adminLogin(
   _prevState: { error?: string } | undefined,
   formData: FormData
 ): Promise<{ error?: string }> {
+  const configError = adminConfigError();
+  if (configError) {
+    console.error(`[admin] ${configError}`);
+    return { error: "Admin login is not configured on this server." };
+  }
+
   const password = String(formData.get("password") ?? "");
 
   if (!password) {

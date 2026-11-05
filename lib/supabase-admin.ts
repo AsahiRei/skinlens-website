@@ -44,6 +44,28 @@ export function isReadOnlyMode(): boolean {
   );
 }
 
+/** New-format keys (`sb_secret_…` / `sb_publishable_…`) are not JWTs. */
+function isNewApiKey(key: string): boolean {
+  return key.startsWith("sb_secret_") || key.startsWith("sb_publishable_");
+}
+
+/**
+ * supabase-js still sends the API key as `Authorization: Bearer <key>` on
+ * REST/storage/auth requests. New-format keys aren't JWTs, so the gateway can
+ * reject that header with intermittent "Invalid JWT" errors. Strip the bearer
+ * when it's just the API key — the `apikey` header alone authenticates.
+ * Real user access tokens (actual JWTs) are left untouched.
+ */
+function fetchWithoutKeyAsBearer(key: string): typeof fetch {
+  return (input, init) => {
+    const headers = new Headers(init?.headers);
+    if (headers.get("Authorization") === `Bearer ${key}`) {
+      headers.delete("Authorization");
+    }
+    return fetch(input, { ...init, headers });
+  };
+}
+
 /**
  * Server-side client for the admin page. ONLY import from server code —
  * a secret key must never reach the browser. Returns null when no usable
@@ -55,6 +77,9 @@ export function getSupabaseAdmin(): SupabaseClient | null {
   if (!cached || cachedKey !== key) {
     cached = createClient(supabaseUrl(), key, {
       auth: { persistSession: false, autoRefreshToken: false },
+      global: isNewApiKey(key)
+        ? { fetch: fetchWithoutKeyAsBearer(key) }
+        : undefined,
     });
     cachedKey = key;
   }

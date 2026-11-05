@@ -1,7 +1,8 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { motion } from "motion/react";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ChevronDown } from "lucide-react";
 import type { AppointmentStatus } from "@/lib/admin-types";
 
 export function StatCard({
@@ -99,6 +100,101 @@ export function Panel({
       className={`bg-white rounded-[18px] sm:rounded-[20px] p-5 sm:p-6 border border-[#E5EDE8] shadow-xs ${className}`}
     >
       {children}
+    </div>
+  );
+}
+
+export type PillOption<T extends string> = { value: T; label: string };
+
+/**
+ * Pill-shaped dropdown used for in-row choices (appointment status, a
+ * doctor's hospital). `pillClassName` sets the pill's colors so each use can
+ * match its meaning (status colors, or neutral).
+ */
+export function PillSelect<T extends string>({
+  value,
+  options,
+  onChange,
+  pillClassName,
+  label,
+  disabled = false,
+  menuWidthClassName = "w-36",
+  capitalize = false,
+  icon: Icon,
+}: {
+  value: T;
+  options: PillOption<T>[];
+  onChange: (value: T) => void;
+  pillClassName: string;
+  /** Accessible name, e.g. "Status for Maria". */
+  label: string;
+  disabled?: boolean;
+  menuWidthClassName?: string;
+  capitalize?: boolean;
+  icon?: React.ComponentType<{ size?: number | string; className?: string }>;
+}) {
+  const [isOpen, setIsOpen] = useState(false);
+  const current = options.find((o) => o.value === value)?.label ?? value;
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setIsOpen(false);
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [isOpen]);
+
+  return (
+    <div className="relative inline-block min-w-0 max-w-full">
+      <button
+        type="button"
+        disabled={disabled}
+        aria-label={`${label}: ${current}`}
+        aria-haspopup="listbox"
+        aria-expanded={isOpen}
+        onClick={() => setIsOpen((o) => !o)}
+        className={`flex items-center gap-2 max-w-full pl-3 pr-3 py-1.5 rounded-full border text-[12px] font-medium whitespace-nowrap cursor-pointer transition-all duration-200 ease-in-out hover:brightness-95 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-[#15803D]/30 disabled:opacity-60 disabled:cursor-default ${capitalize ? "capitalize" : ""} ${pillClassName}`}
+      >
+        {Icon ? <Icon size={14} className="shrink-0 opacity-70" /> : null}
+        <span className="truncate">{current}</span>
+        <ChevronDown
+          size={14}
+          className={`shrink-0 pointer-events-none opacity-50 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+        />
+      </button>
+
+      {isOpen ? (
+        <>
+          <div className="fixed inset-0 z-10" onClick={() => setIsOpen(false)} />
+          <div
+            role="listbox"
+            aria-label={label}
+            className={`absolute right-0 mt-1 z-20 ${menuWidthClassName} max-h-64 overflow-y-auto bg-white border border-[#E5EDE8] rounded-[12px] shadow-lg py-1`}
+          >
+            {options.map((o) => (
+              <button
+                key={o.value}
+                type="button"
+                role="option"
+                aria-selected={o.value === value}
+                title={o.label}
+                onClick={() => {
+                  setIsOpen(false);
+                  if (o.value !== value) onChange(o.value);
+                }}
+                className={`w-full text-left px-3 py-2 text-[12px] truncate transition-colors hover:bg-[#F4F7F5] ${capitalize ? "capitalize" : ""} ${
+                  o.value === value
+                    ? "font-semibold text-[#15803D] bg-[#EAF6EE]"
+                    : "text-[#3F4A44]"
+                }`}
+              >
+                {o.label}
+              </button>
+            ))}
+          </div>
+        </>
+      ) : null}
     </div>
   );
 }

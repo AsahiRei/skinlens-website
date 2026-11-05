@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown, FileText, Loader2 } from "lucide-react";
+import { FileText, Loader2 } from "lucide-react";
 import type { Appointment, AppointmentStatus } from "@/lib/admin-types";
 import { getAppointmentReportUrlAction } from "../data-actions";
-import { Panel, STATUS_STYLES } from "../ui";
+import { Panel, PillSelect, STATUS_STYLES } from "../ui";
 
 const FILTERS: { id: AppointmentStatus | "all"; label: string }[] = [
   { id: "all", label: "All" },
@@ -15,63 +15,9 @@ const FILTERS: { id: AppointmentStatus | "all"; label: string }[] = [
   { id: "declined", label: "Declined" },
 ];
 
-const STATUSES: AppointmentStatus[] = [
-  "requested",
-  "scheduled",
-  "completed",
-  "cancelled",
-  "declined",
-];
-
-function StatusSelect({
-  value,
-  onChange,
-}: {
-  value: AppointmentStatus;
-  onChange: (status: AppointmentStatus) => void;
-}) {
-  const [isOpen, setIsOpen] = useState(false);
-
-  return (
-    <div className="relative inline-block group">
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className={`flex items-center gap-2 pl-3 pr-7 py-1.5 rounded-full border text-[12px] font-medium capitalize whitespace-nowrap cursor-pointer transition-all duration-200 ease-in-out ${STATUS_STYLES[value]} hover:brightness-95 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-[#15803D]/30`}
-      >
-        {value}
-        <ChevronDown
-          size={14}
-          className={`pointer-events-none opacity-50 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
-        />
-      </button>
-
-      {isOpen && (
-        <>
-          <div
-            className="fixed inset-0 z-10"
-            onClick={() => setIsOpen(false)}
-          />
-          <div className="absolute right-0 mt-1 z-20 w-36 bg-white border border-[#E5EDE8] rounded-[12px] shadow-lg overflow-hidden py-1 animate-in fade-in zoom-in-95 duration-100">
-            {STATUSES.map((s) => (
-              <button
-                key={s}
-                onClick={() => {
-                  onChange(s);
-                  setIsOpen(false);
-                }}
-                className={`w-full text-left px-3 py-2 text-[12px] capitalize transition-colors hover:bg-[#F4F7F5] ${
-                  s === value ? "font-semibold text-[#15803D] bg-[#EAF6EE]" : "text-[#3F4A44]"
-                }`}
-              >
-                {s}
-              </button>
-            ))}
-          </div>
-        </>
-      )}
-    </div>
-  );
-}
+const STATUS_OPTIONS = FILTERS.filter(
+  (f): f is { id: AppointmentStatus; label: string } => f.id !== "all"
+).map((f) => ({ value: f.id, label: f.label }));
 
 export function AppointmentsSection({
   appointments,
@@ -93,7 +39,15 @@ export function AppointmentsSection({
     setOpeningPdfId(appointmentId);
     try {
       const url = await getAppointmentReportUrlAction(appointmentId);
-      window.open(url, "_blank", "noopener,noreferrer");
+      // Opened after an await, so pop-up blockers may stop it. With
+      // "noopener" window.open always returns null, so open without it and
+      // cut the opener link by hand to detect a blocked tab.
+      const tab = window.open(url, "_blank");
+      if (tab) {
+        tab.opener = null;
+      } else {
+        onError?.("Your browser blocked the PDF tab. Allow pop-ups for this site and try again.");
+      }
     } catch (err) {
       onError?.(err instanceof Error ? err.message : "Couldn't open the PDF.");
     } finally {
@@ -151,11 +105,12 @@ export function AppointmentsSection({
                   {a.scheduledAt ? ` • Visit ${a.scheduledAt}` : ""}
                 </p>
               </div>
-              <StatusSelect
+              <PillSelect
+                label={`Status for ${a.patientName}`}
                 value={a.status}
-                onChange={(s) => {
-                  if (s !== a.status) onStatusChange(a.id, s);
-                }}
+                options={STATUS_OPTIONS}
+                pillClassName={STATUS_STYLES[a.status]}
+                onChange={(s) => onStatusChange(a.id, s)}
               />
               {a.hasPdf ? (
                 <button

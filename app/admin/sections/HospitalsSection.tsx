@@ -9,6 +9,7 @@ import {
   Eye,
   EyeOff,
   Globe,
+  Loader2,
   MapPin,
   MoreVertical,
   Navigation,
@@ -24,6 +25,7 @@ import {
 } from "lucide-react";
 import type { Clinic } from "@/lib/admin-types";
 import { ActivePill, Panel } from "../ui";
+import { useToast } from "../toast";
 import {
   HospitalMap,
   isValidCoord,
@@ -54,8 +56,11 @@ function HospitalModal({
 }: {
   initial: Clinic | null;
   onClose: () => void;
-  onSave: (clinic: Omit<Clinic, "id"> & { id?: string }) => void;
+  /** Resolves true when saved; the modal stays open on false. */
+  onSave: (clinic: Omit<Clinic, "id"> & { id?: string }) => Promise<boolean>;
 }) {
+  const toast = useToast();
+  const [saving, setSaving] = useState(false);
   const [form, setForm] = useState<Omit<Clinic, "id">>(
     initial
       ? {
@@ -251,8 +256,12 @@ function HospitalModal({
             Active — visible in the app
           </label>
           <button
-            onClick={() => {
-              if (!form.name.trim()) return;
+            disabled={saving}
+            onClick={async () => {
+              if (!form.name.trim()) {
+                toast.error("Enter the hospital name first.");
+                return;
+              }
               const lat = parseFloat(latStr);
               const lng = parseFloat(lngStr);
               const parsedRating = parseFloat(ratingStr);
@@ -260,7 +269,8 @@ function HospitalModal({
                 Number.isFinite(parsedRating)
                   ? Math.min(5, Math.max(0, parsedRating))
                   : 0;
-              onSave({
+              setSaving(true);
+              const ok = await onSave({
                 ...form,
                 name: form.name.trim(),
                 latitude: Number.isFinite(lat) ? lat : null,
@@ -270,10 +280,14 @@ function HospitalModal({
                 // Only include id when editing an existing row.
                 ...(initial?.id ? { id: initial.id } : {}),
               });
+              // On success the parent unmounts this modal; on failure keep
+              // the form (and what was typed) so the admin can retry.
+              if (!ok) setSaving(false);
             }}
-            className="custom-pill-cta text-white text-[14px] font-medium px-7 py-3.5 rounded-full shadow-md transition-all flex items-center justify-center min-h-[52px] active:scale-[0.99] mt-1"
+            className="custom-pill-cta text-white text-[14px] font-medium px-7 py-3.5 rounded-full shadow-md transition-all flex items-center justify-center gap-2 min-h-[52px] active:scale-[0.99] mt-1 disabled:opacity-70"
           >
-            {initial ? "Save changes" : "Add hospital"}
+            {saving ? <Loader2 size={18} className="animate-spin" aria-hidden /> : null}
+            {saving ? "Saving..." : initial ? "Save changes" : "Add hospital"}
           </button>
         </div>
       </motion.div>
@@ -367,7 +381,8 @@ export function HospitalsSection({
   clinics: Clinic[];
   doctorsCountByClinic: Record<string, number>;
   onToggleActive: (id: string) => void;
-  onSave: (clinic: Omit<Clinic, "id"> & { id?: string }) => void;
+  /** Resolves true when saved; the modal stays open on false. */
+  onSave: (clinic: Omit<Clinic, "id"> & { id?: string }) => Promise<boolean>;
   onDelete: (id: string) => void;
   onManageCodes: (clinicId: string) => void;
 }) {
@@ -623,10 +638,13 @@ export function HospitalsSection({
               setModalOpen(false);
               setEditing(null);
             }}
-            onSave={(clinic) => {
-              onSave(clinic);
-              setModalOpen(false);
-              setEditing(null);
+            onSave={async (clinic) => {
+              const ok = await onSave(clinic);
+              if (ok) {
+                setModalOpen(false);
+                setEditing(null);
+              }
+              return ok;
             }}
           />
         ) : null}
