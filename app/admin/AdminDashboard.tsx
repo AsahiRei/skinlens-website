@@ -16,7 +16,6 @@ import {
   X,
   Loader2,
   FileText,
-  ShieldCheck,
   Download,
 } from "lucide-react";
 import {
@@ -45,7 +44,6 @@ import { CodesSection } from "./sections/CodesSection";
 import { DoctorsSection } from "./sections/DoctorsSection";
 import { AppointmentsSection } from "./sections/AppointmentsSection";
 import { AuditLogsSection } from "./sections/AuditLogsSection";
-import { ValidationSection } from "./sections/ValidationSection";
 import { DownloadSection } from "./sections/DownloadSection";
 import { ToastProvider, useToast } from "./toast";
 
@@ -55,7 +53,6 @@ const SECTIONS = [
   { id: "codes", label: "Invite codes", icon: Ticket },
   { id: "doctors", label: "Doctors", icon: Users },
   { id: "appointments", label: "Appointments", icon: CalendarCheck },
-  { id: "validation", label: "AI validation", icon: ShieldCheck },
   { id: "download", label: "Download link", icon: Download },
   { id: "audit", label: "Audit Logs", icon: FileText },
 ] as const;
@@ -456,8 +453,6 @@ function AdminDashboardContent({
               }}
             />
           ) : null}
-
-          {section === "validation" ? <ValidationSection /> : null}
 
           {section === "download" ? (
             <DownloadSection

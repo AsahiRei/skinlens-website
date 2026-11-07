@@ -7,7 +7,6 @@ import { DOWNLOAD_URL_TAG, normalizeDownloadUrl } from "@/lib/site-settings";
 import { getAdminCookieName, verifyAdminToken } from "@/lib/admin-session";
 import { getSupabaseAdmin, missingSupabaseEnv } from "@/lib/supabase-admin";
 import { toDisplayDate } from "@/lib/admin-db";
-import { getValidationStats, type ValidationStats } from "@/lib/admin-validation";
 import type { AppointmentStatus, Clinic, InviteCode } from "@/lib/admin-types";
 
 const APPOINTMENT_STATUSES: AppointmentStatus[] = [
@@ -501,18 +500,4 @@ export async function saveDownloadUrlAction(
   updateTag(DOWNLOAD_URL_TAG);
   revalidatePath("/admin");
   return { url };
-}
-
-// ── AI validation stats ──────────────────────────────────────────────────
-
-export async function getValidationStatsAction(): Promise<
-  { stats: ValidationStats; error?: undefined } | { stats?: undefined; error: string }
-> {
-  await requireAdmin();
-  try {
-    return { stats: await getValidationStats(requireDb()) };
-  } catch (err) {
-    console.error("[admin] validation stats failed:", err);
-    return { error: err instanceof Error ? err.message : "Could not load validation stats." };
-  }
 }

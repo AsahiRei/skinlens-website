@@ -57,7 +57,3 @@ export type Appointment = {
   status: AppointmentStatus;
   hasPdf: boolean;
 };
-
-/** Below this many doctor reviews an agreement rate is noise, so the
- *  validation dashboard shows "too few reviews" instead of a percentage. */
-export const MIN_REVIEWS_FOR_RATE = 5;
